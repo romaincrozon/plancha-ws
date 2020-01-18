@@ -3,15 +3,12 @@ package com.theia.httpConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
 import com.theia.utils.HTTPRequestUtils;
@@ -30,13 +27,13 @@ public class HttpRequest {
  
 	}
 	
-	public static JSONObject request(String url, Map<String, String> parameters) {
+	public static JSONObject request(String url, Map<String, String> parameters) { 
 		try {
 			HttpURLConnection con = openConnection(url, parameters);
 			if (con != null) {
 				String requestResult = readStream(new InputStreamReader(con.getInputStream()));
 				if (!StringUtils.isEmpty(requestResult)) {
-					return parseToJSONObject(requestResult);
+					return new JSONObject(requestResult);
 				}
 			}
 		} catch (Exception e) {
@@ -89,16 +86,6 @@ public class HttpRequest {
 			in.close();
 			return content.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public static JSONObject parseToJSONObject(String stringToParse){
-		try {
-			JSONParser parser = new JSONParser(); 
-			return (JSONObject) parser.parse(stringToParse);
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return null;

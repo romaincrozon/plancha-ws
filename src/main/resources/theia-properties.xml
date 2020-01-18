@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theia-config>
+	<database>
+		<name>theia_db</name>
+		<url>jdbc:mysql://localhost:3306/</url>
+		<user>root</user>
+		<password>root</password>
+		<tables>
+			<table>
+				<type>serie</type>
+				<name>series</name>
+				<mandatory-fields>title</mandatory-fields>
+			</table>
+			<table>
+				<type>saison</type>
+				<table>series</table>
+				<mandatory-fields>title,serie_id,num_saison</mandatory-fields>
+			</table>
+			<table>
+				<type>episode</type>
+				<table>episodes</table>
+				<mandatory-fields>title,saison_id,serie_id,num_episode</mandatory-fields>
+			</table>
+			<table>
+				<type>film</type>
+				<table>films</table>
+				<mandatory-fields>title</mandatory-fields>
+			</table>
+		</tables>
+	</database>
+</theia-config>

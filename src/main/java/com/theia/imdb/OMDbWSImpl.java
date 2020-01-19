@@ -15,7 +15,7 @@ public class OMDbWSImpl implements OMDbWS{
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put("apikey", API_KEY);
 		parameters.put("t", title);
-		parameters.put("type", "serie");
+		parameters.put("type", "series");
 		return HttpRequest.request(OMDB_API, parameters);
 	}
 	
@@ -24,20 +24,20 @@ public class OMDbWSImpl implements OMDbWS{
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put("apikey", API_KEY);
 		parameters.put("t", title);
-		parameters.put("type", "film");
+		parameters.put("type", "movies");
 		return HttpRequest.request(OMDB_API, parameters);
 	}
 
 
 	@Override
-	public JSONObject getSaison(int serieId, int numSaison) {
+	public JSONObject getSaison(String serieId, int numSaison) {
 		Map<String, String> parameters = OMDbUtils.getGlobalParametersById(API_KEY, serieId);
 		parameters.put("season", "" + numSaison);
 		return HttpRequest.request(OMDB_API, parameters);
 	}
 	
 	@Override
-	public JSONObject getEpisode(int serieId, int numSaison, int numEpisode) {
+	public JSONObject getEpisode(String serieId, int numSaison, int numEpisode) {
 		Map<String, String> parameters = OMDbUtils.getGlobalParametersById(API_KEY, serieId);
 		parameters.put("season", "" + numSaison);
 		parameters.put("episode", "" + numEpisode);

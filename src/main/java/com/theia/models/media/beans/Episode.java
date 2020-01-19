@@ -4,72 +4,64 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sardine.DavResource;
 import com.theia.config.TheiaConfiguration;
+import com.theia.enums.Fields;
 import com.theia.enums.TypeMedia;
+import com.theia.models.dao.DAOUtils;
 import com.theia.utils.FilesUtils;
+import com.theia.utils.Utils;
 
 public class Episode extends Media{
 
-	private int idSaison;
-	private int idSerie;
+	@JsonProperty("Season")
+	private int numSaison;
+	
+	@JsonProperty("seriesID")
+	private String idSerie;
+	
+	@JsonProperty("Episode")
 	private int numEpisode; //Numéro de l'épisode
+
+	public Episode() {
+		super();
+		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode);
+	}
 	
 	public Episode(ResultSet resultSet) {
-		super(resultSet);
+		super(Fields.EPISODE, resultSet);
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode);
+		this.numEpisode = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_EPISODE);
+		this.numSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_SAISON);
+		this.idSerie = DAOUtils.getFieldStringValue(resultSet, Fields.EPISODE + Fields.ID);
+		this.imdbID = DAOUtils.getFieldStringValue(resultSet, Fields.EPISODE + Fields.ID.toString());
 	}
 
-	public Episode(File file, Media media) {
-		super(file);
-		if (media instanceof Saison) {
-			this.idSaison = media.getId();
-			this.idSerie = ((Saison)media).getIdSerie();
-		}else if (media instanceof Serie) {
-			this.idSaison = 1;
-			this.idSerie = ((Serie)media).getId();
-		}
-		this.numEpisode = FilesUtils.getNumberInText(file.getName());
-		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode);
-	}
-	
-	public Episode(DavResource resource, Media media) {
-		super(resource);
-		if (media instanceof Saison) {
-			this.idSaison = media.getId();
-			this.idSerie = ((Saison)media).getIdSerie();
-		}else if (media instanceof Serie) {
-			this.idSaison = 1;
-			this.idSerie = ((Serie)media).getId();
-		}
-		this.numEpisode = FilesUtils.getNumberInText(resource.getName());
-		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode);
-	}
-	
 	@Override
 	public void build(File file) {}
 
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (idSaison >= 0) attributesMap.put("saison_id", String.valueOf(idSaison));
-		if (idSerie >= 0) attributesMap.put("serie_id", String.valueOf(idSerie));
-		if (numEpisode > 0) attributesMap.put("num_episode", String.valueOf(numEpisode));
+		if (numSaison > 0) attributesMap.put(Fields.NUM_SAISON.toString(), String.valueOf(numSaison));
+		if (!Utils.isValueNull(idSerie)) attributesMap.put(Fields.SERIE_ID.toString(), idSerie);
+		if (numEpisode > 0) attributesMap.put(Fields.NUM_EPISODE.toString(), String.valueOf(numEpisode));
 		return attributesMap;
 	}
 	
-	public int getIdSaison() {
-		return idSaison;
+	public int getNumSaison() {
+		return numSaison;
 	}
 
-	public void setIdSaison(int idSaison) {
-		this.idSaison = idSaison;
+	public void setNumSaison(int numSaison) {
+		this.numSaison = numSaison;
 	}
 
-	public int getIdSerie() {
+	public String getIdSerie() {
 		return idSerie;
 	}
 
-	public void setIdSerie(int idSerie) {
+	public void setIdSerie(String idSerie) {
 		this.idSerie = idSerie;
 	}
 

@@ -21,12 +21,14 @@ import com.theia.models.media.beans.Rating;
 import com.theia.models.media.beans.Saison;
 import com.theia.models.media.beans.Serie;
 import com.theia.utils.MediaUtils;
+import com.theia.utils.Utils;
 
 public class DAOMedia {
 
-	public static String SERIE_QUERY = "SELECT * FROM theia_db.series AS series INNER JOIN theia_db.saisons AS saisons ON series.id = saisons.serie_id INNER JOIN theia_db.episodes as episodes ON saisons.id = episodes.saison_id";
+	public static String SERIE_QUERY = "SELECT * FROM theia_db.series AS series "
+			+ "INNER JOIN theia_db.episodes as episodes ON series.serie_id = episodes.episode_seriesID ";
 	
-	public static Media getMediaById(int id, TypeMedia typeMedia) {
+	public static Media getMediaById(String id, TypeMedia typeMedia) {
     	if(typeMedia == TypeMedia.serie) {
     		return getSerieById(id);
     	}
@@ -35,9 +37,9 @@ public class DAOMedia {
 	}
 	
 	
-	private static Media getFilmById(int id) {
+	private static Media getFilmById(String id) {
     	Map<String, String> queryParameters = new HashMap<String, String>();
-    	queryParameters.put("id", "" + id);
+    	queryParameters.put(Fields.ID.toString(), id);
 
 		try {
 			ResultSet resultSet = DAOUtils.prepareSelectAndQuery(TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.film), queryParameters);
@@ -51,13 +53,13 @@ public class DAOMedia {
 	}
 
 
-	private static Media getSerieById(int id) {
+	private static Media getSerieById(String id) {
 		Map<String, String> queryParameters = new HashMap<String, String>();
-    	queryParameters.put(Fields.ID.toString(), "" + id);
+    	queryParameters.put(Fields.SERIE + Fields.ID.toString(), id);
 		try {
-			ResultSet resultSet = DAOUtils.prepareSelectInnerJoinSeriesQuery(DAOMedia.SERIE_QUERY, queryParameters);
-			if (resultSet.next()) {
-	            return new Serie(resultSet);
+			ResultSet resultSet = DAOUtils.prepareSelectInnerJoinSeriesQuery(DAOMedia.SERIE_QUERY, queryParameters, Fields.EPISODE + Fields.NUM_SAISON);
+			if (resultSet != null) {
+	            return MediaUtils.buildCompleteSerie(resultSet);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -130,37 +132,35 @@ public class DAOMedia {
 //		}
 //	}
 	
-	public static int insertMedia(Media media) {
+	public static void insertMedia(Media media) {
 		try {
 			Map<String, String> queryParameters = media.getAttributesMap();
-			int mediaId = DAOMedia.isMediaExistsInDatabase(media);
-			if (mediaId < 0 && DAOUtils.isValidQuery(media.getDatabaseTable(), queryParameters)) {
-				mediaId = DAOUtils.prepareInsertQuery(media.getDatabaseTable(), queryParameters);
+			boolean mediaExists = DAOMedia.isMediaExistsInDatabase(media);
+			if (!mediaExists) {
+				DAOUtils.prepareInsertQuery(media.getDatabaseTable(), queryParameters);
 	//			insertPersonsList(media.getActors(), mediaDbId);
 	//			insertRatingsList(media.getRatings(), mediaDbId);
 			}
-			return mediaId;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
     }
 	
 
-	public static int isMediaExistsInDatabase(Media media) {
+	public static boolean isMediaExistsInDatabase(Media media) {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		if (media instanceof Serie || media instanceof Film) {
-			queryParameters.put(Fields.IMDBID.toString(), String.valueOf(media.getImdbID()));
+			queryParameters.put(Fields.ID.toString(), String.valueOf(media.getImdbID()));
 		}else if (media instanceof Saison){
 			queryParameters.put(Fields.SERIE_ID.toString(), String.valueOf(((Saison) media).getIdSerie()));
-			queryParameters.put(Fields.NUM_SAISON.toString(), String.valueOf(((Saison) media).getNumSaison()));
+			queryParameters.put(Fields.NUM_SAISON.toString(), String.valueOf(((Saison) media).getSeason()));
 		}else if (media instanceof Episode){
 			queryParameters.put(Fields.SERIE_ID.toString(), String.valueOf(((Episode) media).getIdSerie()));
-			queryParameters.put(Fields.SAISON_ID.toString(), String.valueOf(((Episode) media).getIdSaison()));
+			queryParameters.put(Fields.NUM_SAISON.toString(), String.valueOf(((Episode) media).getNumSaison()));
 			queryParameters.put(Fields.NUM_EPISODE.toString(), String.valueOf(((Episode) media).getNumEpisode()));
 		}
 		if (!CollectionUtils.isEmpty(queryParameters))
 			return DAOUtils.isEntryExists(media.getDatabaseTable(), queryParameters);
-		return -1;
+		return false;
 	}
 }

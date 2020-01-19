@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,8 +14,11 @@ import org.springframework.context.annotation.Bean;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.theia.config.TheiaConfiguration;
+import com.theia.enums.Fields;
 import com.theia.enums.TypeMedia;
 import com.theia.models.dao.DAOMedia;
+import com.theia.models.dao.DAOUtils;
 import com.theia.models.media.beans.Episode;
 import com.theia.models.media.beans.Film;
 import com.theia.models.media.beans.Media;
@@ -81,6 +85,40 @@ public class MediaUtils {
 		}
     }
     
+    public static Serie buildCompleteSerie(ResultSet resultSet) {
+    	Serie serie = null;
+		List<Episode> episodes = new ArrayList<Episode>();
+		List<Saison> saisons = new ArrayList<Saison>();
+		int numSaison = 0;
+		try {
+			while(resultSet.next()) {
+				if (serie == null) serie = new Serie(resultSet);
+				
+				int currentSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_SAISON);
+				if (currentSaison != numSaison) {
+					numSaison = currentSaison;
+					saisons.add(new Saison(resultSet));
+				}
+				episodes.add(new Episode(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		saisons.forEach(saison -> {
+			saison.getEpisodes().addAll(getEpisodeBySaison(episodes, saison.getSeason()));
+		});
+		serie.getSeasons().addAll(saisons);
+		return serie;
+    }
+    
+	public static List<Episode> getEpisodeBySaison(List<Episode> episodes, int numSaison){
+		return episodes
+			.stream()
+			.filter(episode -> 
+				episode.getNumSaison() == numSaison)
+			.collect(Collectors.toList());
+	}
+    
     public static JSONObject toJSON(Media media) {
     	try {
         	final ObjectMapper mapper = new ObjectMapper();
@@ -117,7 +155,7 @@ public class MediaUtils {
         return DAOMedia.getTopMediaByType(typeMedia);
 	}
 	
-	public static Media getMediaById(int id, TypeMedia typeMedia) {
+	public static Media getMediaById(String id, TypeMedia typeMedia) {
         return DAOMedia.getMediaById(id, typeMedia);
 	}
 }

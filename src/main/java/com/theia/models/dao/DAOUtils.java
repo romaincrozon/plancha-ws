@@ -50,14 +50,15 @@ public class DAOUtils {
     	return getConnection().prepareStatement(query.toString()).executeQuery();
     }
 
-	public static ResultSet prepareSelectInnerJoinSeriesQuery(String query, Map<String, String> queryParameters) throws SQLException {
+	public static ResultSet prepareSelectInnerJoinSeriesQuery(String query, Map<String, String> queryParameters, String orderBy) throws SQLException {
 		StringBuilder queryBuilder = new StringBuilder(query);
 		if (queryParameters != null && !queryParameters.isEmpty()) {
-    		queryBuilder.append(" WHERE ");
+    		queryBuilder.append(" WHERE "); 
     		for(String parameter : queryParameters.keySet()) {
         		queryBuilder.append(parameter + "='" + queryParameters.get(parameter) + "' AND ");
         	}
 	        queryBuilder.append("1=1");
+	        queryBuilder.append(" ORDER BY " + orderBy);
     	}
     	System.out.println(queryBuilder.toString());
     	return getConnection().prepareStatement(queryBuilder.toString()).executeQuery();
@@ -80,7 +81,7 @@ public class DAOUtils {
 	public static ResultSet prepareSelectAndQuery(DatabaseTable table) throws SQLException {
 		return prepareSelectAndQuery(table, null);
     }
-	
+
 	public static int prepareInsertQuery(DatabaseTable table, Map<String, String> queryParameters) throws SQLException {
 		Connection connection = getConnection();
     	StringBuilder query = new StringBuilder("INSERT INTO " + table.getName() + " (");
@@ -96,6 +97,14 @@ public class DAOUtils {
     	return (resultSet != null && resultSet.first()) ? resultSet.getInt(1) : -1;
     }
 	
+	public static int prepareTruncateQuery(DatabaseTable table) throws SQLException {
+		Connection connection = getConnection();
+    	String query = "TRUNCATE TABLE " + table.getName();
+    	System.out.println(query.toString());
+    	connection.createStatement().execute(query.toString());
+    	return 0;
+    }
+	
 	public static boolean isValidQuery(DatabaseTable table, Map<String, String> queryParameters) {
 		List<String> mandatoryFields = Arrays.asList(table.getMandatoryFields().split(","));
 		if (!queryParameters.keySet().containsAll(mandatoryFields)){
@@ -105,16 +114,32 @@ public class DAOUtils {
 		return true;
 	}
 	
-	public static int isEntryExists(DatabaseTable table, Map<String, String> queryParameters) {
+	public static boolean isEntryExists(DatabaseTable table, Map<String, String> queryParameters) {
 		try {
 			ResultSet resultSet = prepareSelectAndQuery(table, queryParameters);
 			if (resultSet.next()) {
-	            return resultSet.getInt(Fields.ID.toString());
+	            return Utils.isValueNull(resultSet.getString(Fields.ID.toString()));
 			}
-			return -1;
+			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return false;
+	}
+
+	public static String getFieldStringValue(ResultSet resultSet, String field) {
+		try{
+			return resultSet.getString(field);
+		}catch(SQLException ex) {
+			return null;
+		}
+	}
+	
+	public static int getFieldIntValue(ResultSet resultSet, String field) {
+		try{
+			return resultSet.getInt(field);
+		}catch(SQLException ex) {
+			return -1;
+		}
 	}
 }

@@ -71,19 +71,25 @@ public class FilesUtils {
 	
 	public static void insertSerieItems(Serie serie) {
 		Map<Integer, String> saisonsUrl = getResourcesNumbers(serie);
-		for (int numSaison = 1; numSaison <= serie.getNbSaisons(); numSaison++) {
-			Saison saison = (Saison)OMDbUtils.getOmdbSaison(Saison.class, serie.getId(), numSaison);
-			if (saisonsUrl.containsKey(numSaison)) {
-				saison.setUrl(saisonsUrl.get(numSaison));
-			}
-			DAOMedia.insertMedia(saison);
-			Map<Integer, String> episodesUrl = getResourcesNumbers(saison);
-			for(int numEpisode = 1; numEpisode <= saison.getNbEpisode(); numEpisode++) {
-				Episode episode = (Episode)OMDbUtils.getOmdbEpisode(Episode.class, serie.getId(), numSaison, numEpisode);
-				if (episodesUrl.containsKey(numEpisode)) {
-					episode.setUrl(episodesUrl.get(numEpisode));
+		for (int numSaison = 1; numSaison <= serie.getTotalSeasons(); numSaison++) {
+		Saison saison = (Saison)OMDbUtils.getOmdbSaison(Saison.class, serie.getImdbID(), numSaison);
+//		Saison saison = (Saison)OMDbUtils.getOmdbSaison(Saison.class, serie.getImdbID(), numSaison);
+			if (saison != null) {
+				Map<Integer, String> episodesUrl = new HashMap<Integer, String>();
+				if (saisonsUrl.containsKey(numSaison)) {
+					saison.setUrl(saisonsUrl.get(numSaison));
+					episodesUrl = getResourcesNumbers(saison);
 				}
-				DAOMedia.insertMedia(episode);
+//				DAOMedia.insertMedia(saison);
+				for(int numEpisode = 1; numEpisode <= saison.getNbEpisodes(); numEpisode++) {
+					Episode episode = (Episode)OMDbUtils.getOmdbEpisode(Episode.class, serie.getImdbID(), numSaison, numEpisode);
+					if (episode != null) {
+						if (episodesUrl.containsKey(numEpisode)) {
+							episode.setUrl(episodesUrl.get(numEpisode));
+						}
+						DAOMedia.insertMedia(episode);
+					}
+				}
 			}
 		}
 	}
@@ -93,9 +99,16 @@ public class FilesUtils {
 			Map<Integer, String> resourcesMap = new HashMap<Integer, String>();
 			SardineService.getInstance().list(media.getUrl(), 1)
 				.stream()
-				.forEach(davResource -> resourcesMap.put(FilesUtils.getNumberInText(davResource.getName()), davResource.getHref().toString()));
+				.forEach(davResource -> {
+					int num = FilesUtils.getNumberInText(davResource.getName());
+					if (!davResource.getHref().toString().equals(media.getUrl()) 
+							&& !davResource.getHref().toString().equals(media.getUrl() + "/") 
+							&& num >= 0) {
+						resourcesMap.put(num, davResource.getHref().toString());
+					}
+				});
 			return resourcesMap;
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -106,7 +119,7 @@ public class FilesUtils {
 			List<DavResource> resources = SardineService.getInstance().list(media.getResource().getHref().toString(), 1);
 			for (DavResource resource : resources) {
 				if (resource.isDirectory() && !resource.getName().startsWith("Saison")) {
-					Serie serie = (Serie)OMDbUtils.getOmdbFilm(resource.getName(), Serie.class);
+					Serie serie = (Serie)OMDbUtils.getOmdbSerie(resource.getName(), Serie.class);
 					serie.build(resource);
 					System.out.println("Serie " + resource.getName());
 					DAOMedia.insertMedia(serie);

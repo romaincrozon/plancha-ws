@@ -4,8 +4,11 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.Map;
 
+import com.theia.config.DatabaseTable;
 import com.theia.config.TheiaConfiguration;
+import com.theia.enums.Fields;
 import com.theia.enums.TypeMedia;
+import com.theia.utils.Utils;
 
 public class Film extends Media{
 
@@ -18,7 +21,7 @@ public class Film extends Media{
 	}
 	
 	public Film(ResultSet resultSet) {
-		super(resultSet);
+		super(Fields.FILM, resultSet);
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.film);
 	}
 
@@ -30,8 +33,8 @@ public class Film extends Media{
 	
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (boxOffice != null) attributesMap.put("box_office", String.valueOf(boxOffice));
-		if (production != null) attributesMap.put("production", String.valueOf(production));
+		if (!Utils.isValueNull(boxOffice)) attributesMap.put("box_office", String.valueOf(boxOffice));
+		if (!Utils.isValueNull(production)) attributesMap.put("production", String.valueOf(production));
 		return attributesMap;
 	}
 

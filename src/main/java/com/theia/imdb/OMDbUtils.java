@@ -16,24 +16,40 @@ public class OMDbUtils {
 	public static Object getOmdbSerie(String title, Class dtoClass) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getSerieFromTitre(title);
+		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
+			System.out.println("Error retreiving Serie " + title + " : " + mediaJSON.getString("Error"));
+			return null;
+		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
 	}
 	
 	public static Object getOmdbFilm(String title, Class dtoClass) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getFilmFromTitre(title);
+		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
+			System.out.println("Error retreiving Film " + title + " : " + mediaJSON.getString("Error"));
+			return null;
+		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
 	}
 
-	public static Object getOmdbSaison(Class dtoClass, int serieId, int numSaison) {
+	public static Object getOmdbSaison(Class dtoClass, String serieId, int numSaison) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getSaison(serieId, numSaison);
+		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
+			System.out.println("Error retreiving Saison " + numSaison + " from serie id " + serieId + " : " + mediaJSON.getString("Error"));
+			return null;
+		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
 	}
 	
-	public static Object getOmdbEpisode(Class dtoClass, int serieId, int numSaison, int numEpisode) {
+	public static Object getOmdbEpisode(Class dtoClass, String serieId, int numSaison, int numEpisode) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getEpisode(serieId, numSaison, numEpisode);
+		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
+			System.out.println("Error retreiving Episode " + numEpisode + " from serie id " + serieId + " and saison " + numEpisode + " : " + mediaJSON.getString("Error"));
+			return null;
+		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
 	}
 	
@@ -44,7 +60,7 @@ public class OMDbUtils {
 		return parameters;
 	}
 	
-	public static Map<String, String> getGlobalParametersById(String apiKey, int id){
+	public static Map<String, String> getGlobalParametersById(String apiKey, String id){
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put("apikey", apiKey);
 		parameters.put("i", "" + id);

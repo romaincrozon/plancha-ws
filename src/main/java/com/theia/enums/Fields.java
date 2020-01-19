@@ -1,51 +1,49 @@
 package com.theia.enums;
 
-public enum Fields {
+public class Fields {
 
-	ID ("id"),
-	TITRE ("title"),
-	YEAR ("year"),
-	RATED("rated"),
-	RELEASED ("released"),
-	RUNTIME ("runtime"),
-	GENRE ("genre"),
-	DIRECTOR ("director"),
-	WRITER ("writer"),
-	ACTORS ("actors"), 
-	PLOT ("plot"),
-	LANGUAGE ("language"),
-	COUNTRY ("country"),
-	AWARDS ("awards"),
-	POSTER ("poster"),
-	RATINGS ("ratings"),
-	METASCORE ("metascore"),
-	IMDBRATING ("imdbRating"),
-	IMDBVOTES ("imdbVotes"),
-	IMDBID ("imdbId"),
-	
-	//Specifique episode
-	SAISON_ID ("saison_id"),
-	SERIE_ID ("serie_id"),
-	NUM_EPISODE ("num_episode"),
+	public static String ID = "id";
+	public static String TITRE = "title";
+	public static String YEAR = "year";
+	public static String RATED = "rated";
+	public static String RELEASED = "released";
+	public static String RUNTIME = "runtime";
+	public static String GENRE = "genre";
+	public static String DIRECTOR = "director";
+	public static String WRITER = "writer";
+	public static String ACTORS = "actors";
+	public static String PLOT = "plot";
+	public static String LANGUAGE = "language";
+	public static String COUNTRY = "country";
+	public static String AWARDS="awards";
+	public static String POSTER="poster";
+	public static String RATINGS="ratings";
+	public static String METASCORE="metascore";
+	public static String IMDBRATING="imdbRating";
+	public static String IMDBVOTES="imdbVotes";
+	public static String IMDBID="imdbId";
+	public static String URL="url";
 
-	//Specifique film
-	BOX_OFFICE ("box_office"),
-	PRODUCTION ("production"),
-	
-	//Specifique serie
-	NB_SAISONS ("nbSaisons"),
+	// Specifique episode
+	public static String NUM_SAISON="season";
+	public static String SERIE_ID="seriesID";
+	public static String NUM_EPISODE="episode";
 
-	//Specifique saison
-	NB_EPISODES ("nbEpisodes"),
-	NUM_SAISON ("num_saison");
+	// Specifique film
+	public static String BOX_OFFICE="box_office";
+	public static String PRODUCTION="production";
+
+	// Specifique serie
+	public static String NB_SAISONS="nbSaisons";
+	public static String TOTAL_SEASONS="totalSeasons";
+
+	// Specifique saison
+	public static String NB_EPISODES="nbEpisodes";
 	
-	private String field = "";
-	   
-  	private Fields(String field){
-  		this.field = field;
-  	}
-  	
-  	public String toString() {
-  		return field;
-  	}
+	//Prefix
+	public static String EPISODE="episode_";
+	public static String FILM="film_";
+	public static String SAISON="saison_";
+	public static String SERIE="serie_";
+
 }

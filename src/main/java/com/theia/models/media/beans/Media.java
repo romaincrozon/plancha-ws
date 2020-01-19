@@ -14,11 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sardine.DavResource;
 import com.theia.config.DatabaseTable;
+import com.theia.enums.Fields;
 import com.theia.enums.TypeMedia;
+import com.theia.models.dao.DAOUtils;
+import com.theia.utils.Utils;
 
 public class Media {
 
-	protected int id;
 	protected DatabaseTable table;
 
 	@JsonProperty("Title")
@@ -76,30 +78,29 @@ public class Media {
     @JsonIgnore
 	protected List<Media> medias;
 
-	public Media (ResultSet resultSet) {
-        try {
-			this.setTitle(resultSet.getString("title"));
-	        this.setYear(resultSet.getString("year"));
-	        this.setRated(resultSet.getString("rated"));
-	        this.setReleased(resultSet.getString("released"));
-	        this.setRuntime(resultSet.getString("runtime"));
-	        this.setGenre(resultSet.getString("genre"));
-	        this.setDirector(resultSet.getString("director"));
-	        this.setWriter(resultSet.getString("writer"));
-	        this.setYear(resultSet.getString("actors"));
-	        this.setPlot(resultSet.getString("plot")); 
-	        this.setLanguage(resultSet.getString("language")); 
-	        this.setCountry(resultSet.getString("country")); 
-	        this.setAwards(resultSet.getString("awards")); 
-	        this.setPoster(resultSet.getString("poster")); 
-	        this.setYear(resultSet.getString("ratings")); 
-	        this.setMetascore(resultSet.getString("metascore")); 
-	        this.setImdbRating(resultSet.getString("imdbRating")); 
-	        this.setImdbVotes(resultSet.getString("imdbVotes")); 
-	        this.setImdbID(resultSet.getString("imdbId")); 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Media () {}
+    
+	public Media (String prefix, ResultSet resultSet) {
+		this.setTitle(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.TITRE));
+        this.setYear(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.YEAR));
+        this.setRated(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.RATED));
+        this.setReleased(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.RELEASED));
+        this.setRuntime(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.RUNTIME));
+        this.setGenre(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.GENRE));
+        this.setDirector(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.DIRECTOR));
+        this.setWriter(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.WRITER));
+        this.setYear(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.ACTORS));
+        this.setPlot(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.PLOT)); 
+        this.setLanguage(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.LANGUAGE)); 
+        this.setCountry(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.COUNTRY)); 
+        this.setAwards(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.AWARDS)); 
+        this.setPoster(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.POSTER)); 
+        this.setYear(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.RATINGS)); 
+        this.setMetascore(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.METASCORE)); 
+        this.setImdbRating(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.IMDBRATING)); 
+        this.setImdbVotes(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.IMDBVOTES)); 
+        this.setImdbID(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.ID)); 
+        this.setUrl(DAOUtils.getFieldStringValue(resultSet, prefix + Fields.URL)); 
 	}
 
 	public Media (File file) {
@@ -122,6 +123,7 @@ public class Media {
     
     public void build(DavResource resource) {
     	this.resource = resource;
+    	this.url = resource.getHref().toString();
     }
     
 	public void addMedia(Media media) {
@@ -135,35 +137,31 @@ public class Media {
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = new HashMap<String, String>();
 		
-		if (title != null) attributesMap.put("title", title);
-		if (year != null) attributesMap.put("year", year);
-		if (rated != null) attributesMap.put("rated", rated);
-		if (released != null) attributesMap.put("released", released);
-		if (runtime != null) attributesMap.put("runtime", runtime);
-		if (genre != null) attributesMap.put("genre", genre);
+		if (!Utils.isValueNull(title)) attributesMap.put("title", title);
+		if (!Utils.isValueNull(year)) attributesMap.put("year", year);
+		if (!Utils.isValueNull(rated)) attributesMap.put("rated", rated);
+		
+		String releasedDate = Utils.getSQLDate(released);
+		if (releasedDate != null) attributesMap.put("released", releasedDate);
+		
+		if (!Utils.isValueNull(runtime)) attributesMap.put("runtime", runtime);
+		if (!Utils.isValueNull(genre)) attributesMap.put("genre", genre);
 //		if (director != null) attributesMap.put("director", director);
 //		if (writer != null) attributesMap.put("writer", writer);
 //		if (CollectionUtils.isEmpty(actors)) attributesMap.put("actors", actors); 
-		if (plot != null) attributesMap.put("plot", plot);
-		if (language != null) attributesMap.put("language", language);
-		if (country != null) attributesMap.put("country", country);
-		if (awards != null) attributesMap.put("awards", awards);
-		if (poster != null) attributesMap.put("poster", poster);
+		if (!Utils.isValueNull(plot)) attributesMap.put("plot", plot);
+		if (!Utils.isValueNull(language)) attributesMap.put("language", language);
+		if (!Utils.isValueNull(country)) attributesMap.put("country", country);
+		if (!Utils.isValueNull(awards)) attributesMap.put("awards", awards);
+		if (!Utils.isValueNull(poster)) attributesMap.put("poster", poster);
 //		if (CollectionUtils.isEmpty(ratings)) attributesMap.put("ratings", ratings);
-		if (metascore != null) attributesMap.put("metascore", metascore);
-		if (imdbRating != null) attributesMap.put("imdbRating", imdbRating);
-		if (imdbVotes != null) attributesMap.put("imdbVotes", imdbVotes.replace(",", ""));
-		if (imdbID != null) attributesMap.put("imdbId", imdbID);
+		if (!Utils.isValueNull(metascore)) attributesMap.put("metascore", metascore);
+		if (!Utils.isValueNull(imdbRating)) attributesMap.put("imdbRating", imdbRating);
+		if (!Utils.isValueNull(imdbVotes)) attributesMap.put("imdbVotes", imdbVotes.replace(",", ""));
+		if (!Utils.isValueNull(imdbID)) attributesMap.put("id", imdbID);
+		if (!Utils.isValueNull(url)) attributesMap.put("url", url);
 		
 		return attributesMap;
-	}
-    
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public DatabaseTable getDatabaseTable() {

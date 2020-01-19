@@ -2,6 +2,7 @@ package com.theia.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.sardine.DavResource;
+import com.theia.config.TheiaConfiguration;
 import com.theia.enums.TypeMedia;
 import com.theia.models.dao.DAOMedia;
+import com.theia.models.dao.DAOUtils;
 import com.theia.models.media.beans.Media;
 import com.theia.services.FilesWatchService;
 import com.theia.services.SardineService;
@@ -34,7 +37,7 @@ public class MediaController {
 	@RequestMapping(value="/media/{typeMedia}/{id}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
 	@ResponseBody
-	public Media getMediaById(@PathVariable("typeMedia") String typeMedia, @PathVariable("id") int id) {
+	public Media getMediaById(@PathVariable("typeMedia") String typeMedia, @PathVariable("id") String id) {
 		return MediaUtils.getMediaById(id, TypeMedia.valueOf(typeMedia));
 	}	
 
@@ -51,7 +54,7 @@ public class MediaController {
 	public List<Media> getTopMediasByType(@PathVariable("typeMedia") String typeMedia) {
 		return MediaUtils.getTopMediasByType(TypeMedia.valueOf(typeMedia));
 	}
-	
+
 	@RequestMapping(value="/media/refreshDatabase/{typeMedia}", method = RequestMethod.GET)
 	public void refreshDatabase(@PathVariable("typeMedia") String typeMedia) {
 		try {
@@ -64,6 +67,16 @@ public class MediaController {
 				}
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/media/cleanDatabase/{typeMedia}", method = RequestMethod.GET)
+	public void cleanDatabase(@PathVariable("typeMedia") String typeMedia) {
+		try {
+			DAOUtils.prepareTruncateQuery(TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.serie));
+			DAOUtils.prepareTruncateQuery(TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode));
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}

@@ -9,9 +9,9 @@ public interface OMDbWS {
 	static String OMDB_API = "http://www.omdbapi.com/";
 	static String API_KEY = "8d4c4f52";
 	
-	public JSONObject getSaison(int serieId, int numSaison);
+	public JSONObject getSaison(String serieId, int numSaison);
 	
-	public JSONObject getEpisode(int serieId, int numSaison, int numEpisode);
+	public JSONObject getEpisode(String serieId, int numSaison, int numEpisode);
 	
 	public JSONObject getMediaFromId(String id);
 

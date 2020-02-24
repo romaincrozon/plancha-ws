@@ -21,6 +21,7 @@ import com.theia.utils.Utils;
 
 public class Media {
 
+    @JsonIgnore
 	protected DatabaseTable table;
 
 	@JsonProperty("Title")
@@ -74,6 +75,8 @@ public class Media {
 	protected DavResource resource;
 	
 	protected String url;
+	
+	protected String type;
 
     @JsonIgnore
 	protected List<Media> medias;
@@ -136,34 +139,32 @@ public class Media {
     @JsonIgnore
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = new HashMap<String, String>();
+		String prefix = table.getType().name() + "_";
 		
-		if (!Utils.isValueNull(title)) attributesMap.put("title", title);
-		if (!Utils.isValueNull(year)) attributesMap.put("year", year);
-		if (!Utils.isValueNull(rated)) attributesMap.put("rated", rated);
+		if (!Utils.isValueNull(title)) attributesMap.put(prefix + Fields.TITRE, title);
+		if (!Utils.isValueNull(year)) attributesMap.put(prefix + Fields.YEAR, year);
+		if (!Utils.isValueNull(rated)) attributesMap.put(prefix + Fields.RATED, rated);
 		
 		String releasedDate = Utils.getSQLDate(released);
-		if (releasedDate != null) attributesMap.put("released", releasedDate);
+		if (releasedDate != null) attributesMap.put(prefix + Fields.RELEASED, releasedDate);
 		
-		if (!Utils.isValueNull(runtime)) attributesMap.put("runtime", runtime);
-		if (!Utils.isValueNull(genre)) attributesMap.put("genre", genre);
-//		if (director != null) attributesMap.put("director", director);
-//		if (writer != null) attributesMap.put("writer", writer);
-//		if (CollectionUtils.isEmpty(actors)) attributesMap.put("actors", actors); 
-		if (!Utils.isValueNull(plot)) attributesMap.put("plot", plot);
-		if (!Utils.isValueNull(language)) attributesMap.put("language", language);
-		if (!Utils.isValueNull(country)) attributesMap.put("country", country);
-		if (!Utils.isValueNull(awards)) attributesMap.put("awards", awards);
-		if (!Utils.isValueNull(poster)) attributesMap.put("poster", poster);
-//		if (CollectionUtils.isEmpty(ratings)) attributesMap.put("ratings", ratings);
-		if (!Utils.isValueNull(metascore)) attributesMap.put("metascore", metascore);
-		if (!Utils.isValueNull(imdbRating)) attributesMap.put("imdbRating", imdbRating);
-		if (!Utils.isValueNull(imdbVotes)) attributesMap.put("imdbVotes", imdbVotes.replace(",", ""));
-		if (!Utils.isValueNull(imdbID)) attributesMap.put("id", imdbID);
-		if (!Utils.isValueNull(url)) attributesMap.put("url", url);
+		if (!Utils.isValueNull(runtime)) attributesMap.put(prefix + Fields.RUNTIME, runtime);
+		if (!Utils.isValueNull(genre)) attributesMap.put(prefix + Fields.GENRE, genre);
+		if (!Utils.isValueNull(plot)) attributesMap.put(prefix + Fields.PLOT, plot);
+		if (!Utils.isValueNull(language)) attributesMap.put(prefix + Fields.LANGUAGE, language);
+		if (!Utils.isValueNull(country)) attributesMap.put(prefix + Fields.COUNTRY, country);
+		if (!Utils.isValueNull(awards)) attributesMap.put(prefix + Fields.AWARDS, awards);
+		if (!Utils.isValueNull(poster)) attributesMap.put(prefix + Fields.POSTER, poster);
+		if (!Utils.isValueNull(metascore)) attributesMap.put(prefix + Fields.METASCORE, metascore);
+		if (!Utils.isValueNull(imdbRating)) attributesMap.put(prefix + Fields.IMDBRATING, imdbRating);
+		if (!Utils.isValueNull(imdbVotes)) attributesMap.put(prefix + Fields.IMDBVOTES, imdbVotes.replace(",", ""));
+		if (!Utils.isValueNull(imdbID)) attributesMap.put(prefix + Fields.ID, imdbID);
+		if (!Utils.isValueNull(url)) attributesMap.put(prefix + Fields.URL, url);
 		
 		return attributesMap;
 	}
 
+    @JsonIgnore
 	public DatabaseTable getDatabaseTable() {
 		return table;
 	}
@@ -362,5 +363,13 @@ public class Media {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

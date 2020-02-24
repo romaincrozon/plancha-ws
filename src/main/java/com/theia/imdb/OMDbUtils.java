@@ -16,8 +16,8 @@ public class OMDbUtils {
 	public static Object getOmdbSerie(String title, Class dtoClass) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getSerieFromTitre(title);
-		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
-			System.out.println("Error retreiving Serie " + title + " : " + mediaJSON.getString("Error"));
+		if (mediaJSON == null || (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False"))) {
+			System.out.println("Error retreiving Serie " + title);
 			return null;
 		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
@@ -26,8 +26,8 @@ public class OMDbUtils {
 	public static Object getOmdbFilm(String title, Class dtoClass) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getFilmFromTitre(title);
-		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
-			System.out.println("Error retreiving Film " + title + " : " + mediaJSON.getString("Error"));
+		if (mediaJSON == null || (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False"))) {
+			System.out.println("Error retreiving Film " + title);
 			return null;
 		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
@@ -36,8 +36,8 @@ public class OMDbUtils {
 	public static Object getOmdbSaison(Class dtoClass, String serieId, int numSaison) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getSaison(serieId, numSaison);
-		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
-			System.out.println("Error retreiving Saison " + numSaison + " from serie id " + serieId + " : " + mediaJSON.getString("Error"));
+		if (mediaJSON == null || (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False"))) {
+			System.out.println("Error retreiving Saison " + numSaison + " from serie id " + serieId);
 			return null;
 		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);
@@ -46,8 +46,8 @@ public class OMDbUtils {
 	public static Object getOmdbEpisode(Class dtoClass, String serieId, int numSaison, int numEpisode) {
 		OMDbWS omdbWS = new OMDbWSImpl();
 		JSONObject mediaJSON = omdbWS.getEpisode(serieId, numSaison, numEpisode);
-		if (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False")) {
-			System.out.println("Error retreiving Episode " + numEpisode + " from serie id " + serieId + " and saison " + numEpisode + " : " + mediaJSON.getString("Error"));
+		if (mediaJSON == null || (mediaJSON.has("Response") && mediaJSON.get("Response").equals("False"))) {
+			System.out.println("Error retreiving Episode " + numEpisode + " from serie id " + serieId + " and saison " + numEpisode + ".");
 			return null;
 		}
 		return Utils.mapJSONToDTO(mediaJSON, dtoClass);

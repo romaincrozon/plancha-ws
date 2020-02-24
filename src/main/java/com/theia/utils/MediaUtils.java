@@ -94,7 +94,7 @@ public class MediaUtils {
 			while(resultSet.next()) {
 				if (serie == null) serie = new Serie(resultSet);
 				
-				int currentSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_SAISON);
+				int currentSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE_PREFIX + Fields.NUM_SAISON);
 				if (currentSaison != numSaison) {
 					numSaison = currentSaison;
 					saisons.add(new Saison(resultSet));
@@ -107,9 +107,14 @@ public class MediaUtils {
 		saisons.forEach(saison -> {
 			saison.getEpisodes().addAll(getEpisodeBySaison(episodes, saison.getSeason()));
 		});
-		serie.getSeasons().addAll(saisons);
+		if (serie != null)
+			serie.getSeasons().addAll(saisons);
 		return serie;
     }
+    
+	public static Media buildEpisode(ResultSet resultSet) {
+		return new Episode(resultSet);
+	}
     
 	public static List<Episode> getEpisodeBySaison(List<Episode> episodes, int numSaison){
 		return episodes
@@ -143,6 +148,7 @@ public class MediaUtils {
 //        if (medias.size() <= nbMedia) {
 //        	return medias;
 //        }
+        //todo verifier que le media n'est pas deja present
         for (int i = 0; i < nbMedia; i++) {
         	Media media = medias.get(rand.nextInt(medias.size()));
 //        	if (randomMediasList.indexOf(media) < -1)
@@ -157,5 +163,9 @@ public class MediaUtils {
 	
 	public static Media getMediaById(String id, TypeMedia typeMedia) {
         return DAOMedia.getMediaById(id, typeMedia);
+	}
+
+	public static Media getMediaById(String id) {
+		return DAOMedia.getMediaById(id);
 	}
 }

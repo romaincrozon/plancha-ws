@@ -1,9 +1,9 @@
 package com.theia.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,10 +18,8 @@ import com.theia.enums.TypeMedia;
 import com.theia.models.dao.DAOMedia;
 import com.theia.models.dao.DAOUtils;
 import com.theia.models.media.beans.Media;
-import com.theia.services.FilesWatchService;
 import com.theia.services.SardineService;
 import com.theia.utils.FilesUtils;
-import com.theia.utils.LibraryType;
 import com.theia.utils.MediaUtils;
 
 @Controller
@@ -33,12 +31,40 @@ public class MediaController {
 	public List<Media> getAllMedias(@PathVariable("typeMedia") String typeMedia) {
 		return DAOMedia.getAllMediaByType(TypeMedia.valueOf(typeMedia)); 
 	}	
+
+	@RequestMapping(value="/media/alphabetical/{typeMedia}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "http://localhost:4200")
+	@ResponseBody
+	public Map<String, List<Media>> getAllMediasAlphabetical(@PathVariable("typeMedia") String typeMedia) {
+		return DAOMedia.getAllMediaByTypeAlphabetical(TypeMedia.valueOf(typeMedia)); 
+	}	
+
+	@RequestMapping(value="/media/genres/{typeMedia}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "http://localhost:4200")
+	@ResponseBody
+	public List<String> getAllGenres(@PathVariable("typeMedia") String typeMedia) {
+		return DAOMedia.getAllGenres(TypeMedia.valueOf(typeMedia)); 
+	}	
 	
+	@RequestMapping(value="/relatedFilms/genre/{genres}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "http://localhost:4200")
+	@ResponseBody
+	public List<Media> getRelatedFilms(@PathVariable("genres") String genres) {
+		return DAOMedia.getRelatedFilms(genres); 
+	}	
+
 	@RequestMapping(value="/media/{typeMedia}/{id}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
 	@ResponseBody
 	public Media getMediaById(@PathVariable("typeMedia") String typeMedia, @PathVariable("id") String id) {
 		return MediaUtils.getMediaById(id, TypeMedia.valueOf(typeMedia));
+	}	
+	
+	@RequestMapping(value="/media/all/{id}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "http://localhost:4200")
+	@ResponseBody
+	public Media getMediaById(@PathVariable("id") String id) {
+		return MediaUtils.getMediaById(id);
 	}	
 
 	@RequestMapping(value="/media/randomMedia/{nbMedias}", method = RequestMethod.GET)
@@ -58,7 +84,7 @@ public class MediaController {
 	@RequestMapping(value="/media/refreshDatabase/{typeMedia}", method = RequestMethod.GET)
 	public void refreshDatabase(@PathVariable("typeMedia") String typeMedia) {
 		try {
-			List<DavResource> davResouces = SardineService.getInstance().list("http://192.168.0.25/dav/Séries/", 0);
+			List<DavResource> davResouces = SardineService.getInstance().list("http://192.168.0.25/dav/Films/", 0);
 			if (davResouces != null && !davResouces.isEmpty()) {
 				DavResource davResource = davResouces.stream().findFirst().orElse(null);
 				if (davResource != null) {

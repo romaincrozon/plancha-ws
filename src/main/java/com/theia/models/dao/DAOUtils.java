@@ -46,6 +46,30 @@ public class DAOUtils {
         	}
         	query.append("1=1");
     	}
+    	query.append(" ORDER BY " + table.getName() + "." + table.getType().toString() + "_" + Fields.TITRE);
+    	System.out.println(query.toString());
+    	return getConnection().prepareStatement(query.toString()).executeQuery();
+    }
+
+	public static ResultSet prepareSelectOrQuery(DatabaseTable table, Map<String, List<String>> queryParameters) throws SQLException {
+    	StringBuilder query = new StringBuilder("SELECT * FROM " + table.getName());
+    	if (queryParameters != null && !queryParameters.isEmpty()) {
+    		query.append(" WHERE (");
+    		for(String parameter : queryParameters.keySet()) {
+    			for(String value : queryParameters.get(parameter)) {
+    				query.append(parameter + "='" + value.trim() + "' OR ");
+    			}
+            	query.append(" 0=1) AND ");
+    		}
+        	query.append("1=1");
+    	}
+    	query.append(" ORDER BY " + table.getName() + "." + table.getType().toString() + "_" + Fields.TITRE);
+    	System.out.println(query.toString());
+    	return getConnection().prepareStatement(query.toString()).executeQuery();
+	}
+	
+	public static ResultSet prepareSelectSpecificField(DatabaseTable table, String field) throws SQLException {
+    	StringBuilder query = new StringBuilder("SELECT " + field + " FROM " + table.getName() + " ORDER BY " + field + " ASC");
     	System.out.println(query.toString());
     	return getConnection().prepareStatement(query.toString()).executeQuery();
     }
@@ -64,20 +88,6 @@ public class DAOUtils {
     	return getConnection().prepareStatement(queryBuilder.toString()).executeQuery();
     }
 	
-	
-//	public static ResultSet prepareSelectOrQuery(DatabaseTable table, Map<String, String> queryParameters) throws SQLException {
-//    	StringBuilder query = new StringBuilder("SELECT * FROM " + table.getName());
-//    	if (queryParameters != null && !queryParameters.isEmpty()) {
-//    		query.append(" WHERE ");
-//    		for(String parameter : queryParameters.keySet()) {
-//        		query.append(parameter + "=" + queryParameters.get(parameter) + " AND ");
-//        	}
-//        	query.append("1=1");
-//    	}
-//    	System.out.println(query.toString());
-//    	return getConnection().prepareStatement(query.toString()).executeQuery();
-//    }
-	
 	public static ResultSet prepareSelectAndQuery(DatabaseTable table) throws SQLException {
 		return prepareSelectAndQuery(table, null);
     }
@@ -94,6 +104,7 @@ public class DAOUtils {
     	System.out.println(query.toString());
     	connection.createStatement().executeUpdate(query.toString());
     	ResultSet resultSet = connection.prepareStatement("SELECT LAST_INSERT_ID();").executeQuery();
+    	System.out.println("Entry added");
     	return (resultSet != null && resultSet.first()) ? resultSet.getInt(1) : -1;
     }
 	
@@ -118,7 +129,7 @@ public class DAOUtils {
 		try {
 			ResultSet resultSet = prepareSelectAndQuery(table, queryParameters);
 			if (resultSet.next()) {
-	            return Utils.isValueNull(resultSet.getString(Fields.ID.toString()));
+	            return !Utils.isValueNull(resultSet.getString(table.getType().name() + "_" + Fields.ID));
 			}
 			return false;
 		} catch (SQLException e) {

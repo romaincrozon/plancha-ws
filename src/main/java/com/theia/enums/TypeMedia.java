@@ -5,7 +5,8 @@ public enum TypeMedia {
 	film, 
 	serie, 
 	episode,
-	saison;
+	saison,
+	missingMedia;
 
 //	private String databaseTable = "";
 //	   

@@ -60,9 +60,10 @@ public class Saison extends Media{
 	}
 	
 	public Saison(ResultSet resultSet) {
-		super(Fields.SAISON, resultSet);
+		super(Fields.SAISON_PREFIX, resultSet);
+		this.type = Fields.SAISON;
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.saison);
-		this.season = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_SAISON);
+		this.season = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE_PREFIX + Fields.NUM_SAISON);
 	}
 	
 	public Saison(File directory, Media parentMedia) {
@@ -92,9 +93,11 @@ public class Saison extends Media{
 	
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (CollectionUtils.isEmpty(episodes)) attributesMap.put("nb_episodes", String.valueOf(episodes.size()));
-		if (!Utils.isValueNull(idSerie)) attributesMap.put("serie_id", idSerie);
-		if (numSaison > 0) attributesMap.put("num_saison", String.valueOf(numSaison));
+		String prefix = table.getType().name() + "_";
+		
+		if (CollectionUtils.isEmpty(episodes)) attributesMap.put(prefix + Fields.NB_EPISODES, String.valueOf(episodes.size()));
+		if (!Utils.isValueNull(idSerie)) attributesMap.put(prefix + Fields.SERIE_ID, idSerie);
+		if (numSaison > 0) attributesMap.put(prefix + Fields.NUM_SAISON, String.valueOf(numSaison));
 		return attributesMap;
 	}
 	

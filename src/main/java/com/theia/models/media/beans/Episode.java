@@ -30,12 +30,12 @@ public class Episode extends Media{
 	}
 	
 	public Episode(ResultSet resultSet) {
-		super(Fields.EPISODE, resultSet);
+		super(Fields.EPISODE_PREFIX, resultSet);
+		this.type = Fields.EPISODE;
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.episode);
-		this.numEpisode = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_EPISODE);
-		this.numSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE + Fields.NUM_SAISON);
-		this.idSerie = DAOUtils.getFieldStringValue(resultSet, Fields.EPISODE + Fields.ID);
-		this.imdbID = DAOUtils.getFieldStringValue(resultSet, Fields.EPISODE + Fields.ID.toString());
+		this.numEpisode = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE_PREFIX + Fields.NUM_EPISODE);
+		this.numSaison = DAOUtils.getFieldIntValue(resultSet, Fields.EPISODE_PREFIX + Fields.NUM_SAISON);
+		this.idSerie = DAOUtils.getFieldStringValue(resultSet, Fields.SERIE_PREFIX + Fields.ID);
 	}
 
 	@Override
@@ -43,9 +43,11 @@ public class Episode extends Media{
 
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (numSaison > 0) attributesMap.put(Fields.NUM_SAISON.toString(), String.valueOf(numSaison));
-		if (!Utils.isValueNull(idSerie)) attributesMap.put(Fields.SERIE_ID.toString(), idSerie);
-		if (numEpisode > 0) attributesMap.put(Fields.NUM_EPISODE.toString(), String.valueOf(numEpisode));
+		String prefix = table.getType().name() + "_";
+		
+		if (numSaison > 0) attributesMap.put(prefix + Fields.NUM_SAISON, String.valueOf(numSaison));
+		if (!Utils.isValueNull(idSerie)) attributesMap.put(prefix + Fields.SERIE_ID, idSerie);
+		if (numEpisode > 0) attributesMap.put(prefix + Fields.NUM_EPISODE, String.valueOf(numEpisode));
 		return attributesMap;
 	}
 	

@@ -24,7 +24,7 @@ public class OMDbWSImpl implements OMDbWS{
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put("apikey", API_KEY);
 		parameters.put("t", title);
-		parameters.put("type", "movies");
+		parameters.put("type", "movie");
 		return HttpRequest.request(OMDB_API, parameters);
 	}
 

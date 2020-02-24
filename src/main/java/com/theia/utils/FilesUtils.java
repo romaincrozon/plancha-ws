@@ -20,6 +20,7 @@ import com.theia.models.dao.DAOMedia;
 import com.theia.models.media.beans.Episode;
 import com.theia.models.media.beans.Film;
 import com.theia.models.media.beans.Media;
+import com.theia.models.media.beans.MissingMedia;
 import com.theia.models.media.beans.Saison;
 import com.theia.models.media.beans.Serie;
 import com.theia.services.SardineService;
@@ -27,7 +28,8 @@ import com.theia.services.SardineService;
 public class FilesUtils {
 	
 	public static void list(Media media) {
-		listSeriesWebdav(media);
+//		listSeriesWebdav(media);
+		listMoviesWebdav(media);
 	}
 	
 //	public static void listFiles(TypeMedia typeMedia, Media parentMedia) {
@@ -73,14 +75,12 @@ public class FilesUtils {
 		Map<Integer, String> saisonsUrl = getResourcesNumbers(serie);
 		for (int numSaison = 1; numSaison <= serie.getTotalSeasons(); numSaison++) {
 		Saison saison = (Saison)OMDbUtils.getOmdbSaison(Saison.class, serie.getImdbID(), numSaison);
-//		Saison saison = (Saison)OMDbUtils.getOmdbSaison(Saison.class, serie.getImdbID(), numSaison);
 			if (saison != null) {
 				Map<Integer, String> episodesUrl = new HashMap<Integer, String>();
 				if (saisonsUrl.containsKey(numSaison)) {
 					saison.setUrl(saisonsUrl.get(numSaison));
 					episodesUrl = getResourcesNumbers(saison);
 				}
-//				DAOMedia.insertMedia(saison);
 				for(int numEpisode = 1; numEpisode <= saison.getNbEpisodes(); numEpisode++) {
 					Episode episode = (Episode)OMDbUtils.getOmdbEpisode(Episode.class, serie.getImdbID(), numSaison, numEpisode);
 					if (episode != null) {
@@ -118,12 +118,16 @@ public class FilesUtils {
 		try {
 			List<DavResource> resources = SardineService.getInstance().list(media.getResource().getHref().toString(), 1);
 			for (DavResource resource : resources) {
-				if (resource.isDirectory() && !resource.getName().startsWith("Saison")) {
+				if (resource.isDirectory() 
+						&& !resource.getName().startsWith("Saison")
+						&& DAOMedia.isMediaExistsInDatabase(TypeMedia.serie, resource.getHref().getPath())) {
 					Serie serie = (Serie)OMDbUtils.getOmdbSerie(resource.getName(), Serie.class);
-					serie.build(resource);
-					System.out.println("Serie " + resource.getName());
-					DAOMedia.insertMedia(serie);
-					insertSerieItems(serie);
+					if (serie != null) {
+						serie.build(resource);
+						System.out.println("Serie " + resource.getName());
+						DAOMedia.insertMedia(serie);
+						insertSerieItems(serie);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -137,9 +141,14 @@ public class FilesUtils {
 			for (DavResource resource : resources) {
 				if (!resource.isDirectory() && FilesUtils.isVideo(resource)){
 					media = (Film)OMDbUtils.getOmdbFilm(FilenameUtils.removeExtension(resource.getName()), Film.class);
-					media.build(resource);
-					System.out.println("Film " + resource.getName());
-					DAOMedia.insertMedia(media);
+					if (media != null) {
+						media.build(resource);
+						System.out.println("Film " + resource.getName());
+						DAOMedia.insertMedia(media);
+					}else {
+						MissingMedia missingMedia = new MissingMedia(resource.getName(), resource.getHref().toString(), "movie");
+						DAOMedia.insertMissingMedia(missingMedia);
+					}
 				}
 			}
 		} catch (IOException e) {

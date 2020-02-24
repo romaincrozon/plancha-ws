@@ -23,6 +23,7 @@ public class Fields {
 	public static String IMDBVOTES="imdbVotes";
 	public static String IMDBID="imdbId";
 	public static String URL="url";
+	public static String TYPE="type";
 
 	// Specifique episode
 	public static String NUM_SAISON="season";
@@ -41,9 +42,16 @@ public class Fields {
 	public static String NB_EPISODES="nbEpisodes";
 	
 	//Prefix
-	public static String EPISODE="episode_";
-	public static String FILM="film_";
-	public static String SAISON="saison_";
-	public static String SERIE="serie_";
+	public static String EPISODE_PREFIX="episode_";
+	public static String FILM_PREFIX="film_";
+	public static String SAISON_PREFIX="saison_";
+	public static String SERIE_PREFIX="serie_";
+	public static String MISSINGMEDIA_PREFIX="missingmedia_";
+
+	public static String EPISODE="episode";
+	public static String FILM="film";
+	public static String SAISON="saison";
+	public static String SERIE="serie";
+	public static String MISSINGMEDIA="missingmedia";
 
 }

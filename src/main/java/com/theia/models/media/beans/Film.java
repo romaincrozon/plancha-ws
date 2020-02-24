@@ -14,6 +14,11 @@ public class Film extends Media{
 
 	private String boxOffice;
 	private String production;
+
+	public Film() { 
+		super(); 
+		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.film);
+	}
 	
 	public Film(File file) { 
 		super(file); 
@@ -21,7 +26,8 @@ public class Film extends Media{
 	}
 	
 	public Film(ResultSet resultSet) {
-		super(Fields.FILM, resultSet);
+		super(Fields.FILM_PREFIX, resultSet);
+		this.type = Fields.FILM;
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.film);
 	}
 
@@ -33,8 +39,10 @@ public class Film extends Media{
 	
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (!Utils.isValueNull(boxOffice)) attributesMap.put("box_office", String.valueOf(boxOffice));
-		if (!Utils.isValueNull(production)) attributesMap.put("production", String.valueOf(production));
+		String prefix = table.getType().name() + "_";
+		
+		if (!Utils.isValueNull(boxOffice)) attributesMap.put(prefix + Fields.BOX_OFFICE, String.valueOf(boxOffice));
+		if (!Utils.isValueNull(production)) attributesMap.put(prefix + Fields.PRODUCTION, String.valueOf(production));
 		return attributesMap;
 	}
 

@@ -24,9 +24,10 @@ public class Serie extends Media{
 	}
 	
 	public Serie(ResultSet resultSet) {
-		super(Fields.SERIE, resultSet);
+		super(Fields.SERIE_PREFIX, resultSet);
 		this.table = TheiaConfiguration.getDatabaseConfigInstance().getDatabaseTableByTypeMedia(TypeMedia.serie);
-		this.setTotalSeasons(DAOUtils.getFieldIntValue(resultSet, Fields.SERIE + Fields.TOTAL_SEASONS));
+		this.type = Fields.SERIE;
+		this.setTotalSeasons(DAOUtils.getFieldIntValue(resultSet, Fields.SERIE_PREFIX + Fields.TOTAL_SEASONS));
 	}
 	
 	public Serie(File directory) {
@@ -50,7 +51,9 @@ public class Serie extends Media{
 	
 	public Map<String, String> getAttributesMap(){
 		Map<String, String> attributesMap = super.getAttributesMap();
-		if (this.totalSeasons > 0) attributesMap.put("totalSeasons", String.valueOf(totalSeasons));
+		String prefix = table.getType().name() + "_";
+		
+		if (this.totalSeasons > 0) attributesMap.put(prefix + Fields.TOTAL_SEASONS, String.valueOf(totalSeasons));
 		return attributesMap;
 	}
 

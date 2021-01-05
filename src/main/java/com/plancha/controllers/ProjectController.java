@@ -24,6 +24,7 @@ import com.plancha.dto.entity.Task;
 import com.plancha.repositories.ProjectRepository;
 import com.plancha.repositories.SubProjectRepository;
 import com.plancha.repositories.TaskRepository;
+import com.plancha.utils.CalendarUtils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -45,14 +46,13 @@ public class ProjectController {
 	
 	@PostMapping(value = "/projectsByDate", consumes = "application/json", produces = "application/json")
 	public List<Project> getProjectsByDate(@RequestBody CalendarRange calendarRange) {
-		return projectRepository.findProjectByDate(calendarRange.getFromDate().getCalendar(), calendarRange.getToDate().getCalendar());
+		if (calendarRange.getStartDate() != null && calendarRange.getEndDate() != null) {
+			return projectRepository.findProjectByDate(
+					CalendarUtils.stringToDate(calendarRange.getStartDate()), 
+					CalendarUtils.stringToDate(calendarRange.getEndDate()));
+		}
+		return null;
 	}
-	
-//	@GetMapping(value = "/project/{status}", produces = "application/json")
-//	public List<Project> getProjectsByStatus(@PathVariable String statusProject) {
-//		// TODO
-//		return projectRepository.findAll();
-//	}
 
 	@GetMapping(value = "/project/{idProject}", produces = "application/json")
 	public Project getProject(@PathVariable long idProject) {

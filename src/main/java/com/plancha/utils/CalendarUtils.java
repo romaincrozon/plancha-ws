@@ -1,28 +1,30 @@
 package com.plancha.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.json.JSONObject;
 
-import com.plancha.dto.CalendarList;
 import com.plancha.dto.Holidays;
-import com.plancha.dto.PlanchaCalendar;
-import com.plancha.dto.entity.CalendarItem;
 import com.plancha.external.HolidaysWS;
 
 public class CalendarUtils {
 
+	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	private static final int OFFSET_HOUR = 1;
+	private static final int OFFSET_DAY = 1;
+
 	public static Calendar createCalendar(Calendar calendar) {
 		Calendar newCalendar = Calendar.getInstance();
 		newCalendar.setTime(calendar.getTime());
+		newCalendar.add(Calendar.HOUR, OFFSET_HOUR);
 		return newCalendar;
 	}
 	
 	public static void incrementeCalendarOneDay(Calendar calendar) {
-		calendar.add(Calendar.DATE, 1);
+		calendar.add(Calendar.DATE, OFFSET_DAY);
 	}
 
 	public static boolean isWeekDay(Calendar calendar) {
@@ -53,5 +55,20 @@ public class CalendarUtils {
 		JSONObject holidaysJSONObject = HolidaysWS.getInstance().getHolidaysByDate(calendar);
 		Holidays holidays = (Holidays) Utils.mapJSONToDTO(holidaysJSONObject, Holidays.class);
 		return (holidays != null && !holidays.getHolidays().isEmpty());
+	}
+	
+	public static Calendar stringToDate(String date) {
+		if (date != null) {
+			try {
+				Calendar calendar = Calendar.getInstance();
+				SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+				calendar.setTime(sdf.parse(date));
+				calendar.add(Calendar.HOUR, OFFSET_HOUR);
+				return calendar;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 }

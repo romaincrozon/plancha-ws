@@ -2,20 +2,19 @@ package com.plancha.dto;
 
 public class CalendarRange {
 
-    private NgbDate fromDate;
-	private NgbDate toDate;
+    private String startDate;
+	private String endDate;
 	
-	public NgbDate getFromDate() {
-		return fromDate;
+	public String getStartDate() {
+		return startDate;
 	}
-	public void setFromDate(NgbDate fromDate) {
-		this.fromDate = fromDate;
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
-	public NgbDate getToDate() {
-		return toDate;
+	public String getEndDate() {
+		return endDate;
 	}
-	public void setToDate(NgbDate toDate) {
-		this.toDate = toDate;
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
-
 }

@@ -33,10 +33,8 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 		Root<SubProject> fromSubproject = query.from(SubProject.class);
 		Root<Task> fromTask = query.from(Task.class);
 		Root<ResourceCalendar> fromResourceCalendar = query.from(ResourceCalendar.class);
-		Root<CalendarItem> fromCalendarItem = query.from(CalendarItem.class);
 
-	    Join<CalendarItem, ResourceCalendar> resourceCalendarJoin = fromCalendarItem.join("resourceCalendar");
-	    Join<ResourceCalendar, Task> taskJoin = fromResourceCalendar.join("task");
+		Join<ResourceCalendar, Task> taskJoin = fromResourceCalendar.join("task");
 	    Join<Task, SubProject> subProjectJoin = fromTask.join("subProject");
 	    Join<SubProject, Project> projectJoin = fromSubproject.join("project");
 	    
@@ -44,27 +42,12 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
 	    		.select(fromProject)
 	            .where(cb.and(
-	                    cb.greaterThanOrEqualTo(fromCalendarItem.get("calendar"), begin),
-	                    cb.lessThanOrEqualTo(fromCalendarItem.get("calendar"), end),
-	                    cb.equal(fromCalendarItem.get("resourceCalendar"), resourceCalendarJoin),
 	                    cb.equal(fromResourceCalendar.get("task"), taskJoin),
 	                    cb.equal(fromTask.get("subProject"), subProjectJoin),
 	                    cb.equal(fromSubproject.get("project"), projectJoin)
 	            ))
-//	            .orderBy(cb.asc(fromCalendarItem.get("calendar")))
 	            .distinct(true)
 	    );
 		return typedQuery.getResultList();
 	}
-
-//	@Override
-//	public List<Project> findAllUsersByPredicates(Collection<java.util.function.Predicate<User>> predicates) {
-//		List<User> allUsers = entityManager.createQuery("select u from User u", User.class).getResultList();
-//		Stream<User> allUsersStream = allUsers.stream();
-//		for (java.util.function.Predicate<User> predicate : predicates) {
-//			allUsersStream = allUsersStream.filter(predicate);
-//		}
-//
-//		return allUsersStream.collect(Collectors.toList());
-//	}
 }

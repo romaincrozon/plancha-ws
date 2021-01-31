@@ -33,7 +33,7 @@ public class RequestController {
 		List<Request> requests = requestRepository.findAll();
 		List<Request> requestsWithProjectName = new ArrayList<Request>();
 		for(Request request : requests) {
-			long id = request.getProject().getId();
+			Long id = request.getProject().getId();
 			request.setProject(projectRepository.findById(id).orElse(null));
 //			request.getProject().setName(projectRepository.findNameById(request.getProject().getId()));
 //			requestsWithProjectName.add(request);
@@ -42,12 +42,12 @@ public class RequestController {
 	}
 
 	@GetMapping(value = "/request/{idRequest}", produces = "application/json")
-	public Request getRequests(@PathVariable long idRequest) {
+	public Request getRequests(@PathVariable Long idRequest) {
 		return requestRepository.findById(idRequest).orElse(null);
 	}
 	
 	@GetMapping(value = "/request/project/{idProject}", produces = "application/json")
-	public List<Request> getRequestsByProject(@PathVariable long idProject) {
+	public List<Request> getRequestsByProject(@PathVariable Long idProject) {
 		return requestRepository.findByProjectId(idProject);
 	}
 

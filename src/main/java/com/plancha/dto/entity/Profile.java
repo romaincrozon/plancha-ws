@@ -14,16 +14,22 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "profile")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+property  = "id", 
+scope     = Long.class)
 public class Profile {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
 	private String name; 
 
@@ -40,11 +46,11 @@ public class Profile {
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Resource.class)
     private Set<Resource> resourceList;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

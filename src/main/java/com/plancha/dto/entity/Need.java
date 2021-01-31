@@ -12,24 +12,30 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "need")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+property  = "id", 
+scope     = Long.class)
 public class Need {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
     @OneToMany(cascade = { CascadeType.ALL }, targetEntity = Resource.class)
     @JsonBackReference
 	private Set<Resource> resource;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public Set<Resource> getResource() {

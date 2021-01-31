@@ -27,7 +27,7 @@ public class NeedController {
 	}
 	
 	@GetMapping(value = "/need/{idResource}", produces = "application/json")
-	public Need getNeed(@PathVariable long idNeed) {
+	public Need getNeed(@PathVariable Long idNeed) {
 		return needRepository.findById(idNeed).orElse(null);
 	}	
 

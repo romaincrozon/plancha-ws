@@ -16,23 +16,29 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "task")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+property  = "id", 
+scope     = Long.class)
 public class Task {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
 	private String name; 
 	private String status;
+//	private TaskType typeTask;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = ResourceCalendar.class, mappedBy = "task")
-	@JsonManagedReference(value="task-resourceCalendar")
+//	@JsonManagedReference(value="task-resourceCalendar")
     @OrderBy(value = "resource ASC")
 	private Set<ResourceCalendar> resourceCalendars;
 	
@@ -41,10 +47,16 @@ public class Task {
     @JoinColumn(name = "subProject_id", referencedColumnName = "id")
     private SubProject subProject; 
 	
-	public long getId() {
+	public Task(Long id) {
+		this.id = id;
+	}
+	public Task() {
+		
+	}
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {

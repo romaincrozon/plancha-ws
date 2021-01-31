@@ -32,6 +32,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
 //			"and c.calendar BETWEEN '2020-11-21' and '2020-11-28'") 
 //	  List<PlanningResourceEntry> findResourceCalendarByRange();
 	  
-
+	Resource findByUsername(String username);
 
 }

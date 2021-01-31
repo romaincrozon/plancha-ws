@@ -2,8 +2,11 @@ package com.plancha.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -30,6 +33,18 @@ public class CalendarUtils {
 	public static boolean isWeekDay(Calendar calendar) {
 		return !(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || 
 			    calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY);
+	}
+	
+	public static List<Calendar> getWeekFromCalendar(Calendar calendar) {
+		List<Calendar> calendars = new ArrayList<Calendar>();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		for(int i = Calendar.MONDAY; i <= Calendar.FRIDAY; i++) {
+			Calendar c = createCalendar(calendar);
+			c.set(Calendar.DAY_OF_WEEK, i);
+			System.out.println(format1.format(c.getTime()));    
+			calendars.add(c);
+		}
+		return calendars;
 	}
 
 	public static String getMonth(int month) {

@@ -9,60 +9,65 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "resource")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+	property  = "id", 
+	scope     = Long.class)
 public class Resource {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
 	private String firstname; 
 	private String lastname;
-	private String login;
+	private String username;
 	private String password;
 	private String quadri;
 	private int availabilityPerWeek;
+	private String token;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = ResourceCalendar.class, mappedBy = "resource")
-    @JsonBackReference(value="resourceCalendar-resource")
+//    @JsonManagedReference(value="resourceCalendar-resource")
 	private Set<ResourceCalendar> resourceCalendars;
-
-//	@JsonBackReference(value="task-resources")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "task_id", referencedColumnName = "id")
-//    private Task task; 
 
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Task.class)
 //    @JsonBackReference(value="project-resource")
 	private Set<Task> tasks;
 
-    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Project.class)
-//    @JsonBackReference(value="project-resource")
+    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Project.class, fetch = FetchType.EAGER)
+//    @JsonBackReference(value="resource-project")
+	@JsonIdentityReference(alwaysAsId = true)
 	private Set<Project> projects;
     
-    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class)
+    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class, fetch = FetchType.EAGER)
 //    @JsonManagedReference(value="profile-resource")
 	private Set<Profile> profiles;
 
-	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Assignment.class, mappedBy = "resource")
+	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Assignment.class, mappedBy = "resource", fetch = FetchType.EAGER)
     @JsonManagedReference(value="assignment-resource")
 	private Set<Assignment> assignments;
     
-	public long getId() {
+	public Resource(Long id) {
+		this.id = id;
+	}
+	public Resource() {
+	}
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getFirstname() {
@@ -76,12 +81,6 @@ public class Resource {
 	}
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
-	}
-	public String getLogin() {
-		return login;
-	}
-	public void setLogin(String login) {
-		this.login = login;
 	}
 	public String getPassword() {
 		return password;
@@ -116,6 +115,12 @@ public class Resource {
 	public Set<Project> getProjects() {
 		return projects;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	public void setProjects(Set<Project> projects) {
 		this.projects = projects;
 	}
@@ -130,6 +135,12 @@ public class Resource {
 	}
 	public void setAssignments(Set<Assignment> assignments) {
 		this.assignments = assignments;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 }

@@ -44,29 +44,29 @@ public class ProjectController {
 		return projectRepository.findAll();
 	}
 	
-	@PostMapping(value = "/projectsByDate", consumes = "application/json", produces = "application/json")
-	public List<Project> getProjectsByDate(@RequestBody CalendarRange calendarRange) {
-		if (calendarRange.getStartDate() != null && calendarRange.getEndDate() != null) {
-			return projectRepository.findProjectByDate(
-					CalendarUtils.stringToDate(calendarRange.getStartDate()), 
-					CalendarUtils.stringToDate(calendarRange.getEndDate()));
-		}
-		return null;
-	}
+//	@PostMapping(value = "/projectsByDate", consumes = "application/json", produces = "application/json")
+//	public List<Project> getProjectsByDate(@RequestBody CalendarRange calendarRange) {
+//		if (calendarRange.getStartDate() != null && calendarRange.getEndDate() != null) {
+//			return projectRepository.findProjectByDate(
+//					CalendarUtils.stringToDate(calendarRange.getStartDate()), 
+//					CalendarUtils.stringToDate(calendarRange.getEndDate()));
+//		}
+//		return null;
+//	}
 
 	@GetMapping(value = "/project/{idProject}", produces = "application/json")
-	public Project getProject(@PathVariable long idProject) {
+	public Project getProject(@PathVariable Long idProject) {
 		return projectRepository.findById(idProject).orElse(null);
 	}
 
 	@GetMapping(value = "/project/{idProject}/subProject", produces = "application/json")
-	public List<SubProject> getProjectSubProjects(@PathVariable long idProject) {
+	public List<SubProject> getProjectSubProjects(@PathVariable Long idProject) {
 		//TODO
 		return subProjectRepository.findAll();
 	}
 	
 	@GetMapping(value = "/project/{idProject}/resources", produces = "application/json")
-	public List<Project> getResourcesByProject(@PathVariable long idProject) {
+	public List<Project> getResourcesByProject(@PathVariable Long idProject) {
 		return projectRepository.findAll();
 	}
 
@@ -76,12 +76,12 @@ public class ProjectController {
 	}
 	
 	@GetMapping(value = "/subProject/{idSubProject}", produces = "application/json")
-	public SubProject getSubProject(@PathVariable long idSubProject) {
+	public SubProject getSubProject(@PathVariable Long idSubProject) {
 		return subProjectRepository.findById(idSubProject).orElse(null);
 	}
 
 	@GetMapping(value = "/subProject/{idSubProject}/task", produces = "application/json")
-	public List<Task> getSubProjectTasks(@PathVariable long idSubProject) {
+	public List<Task> getSubProjectTasks(@PathVariable Long idSubProject) {
 		//TODO
 		return taskRepository.findAll();
 	}
@@ -92,7 +92,7 @@ public class ProjectController {
 	}
 
 	@GetMapping(value = "/task/{idTask}", produces = "application/json")
-	public Task getTask(@PathVariable long idTask) {
+	public Task getTask(@PathVariable Long idTask) {
 		return taskRepository.findById(idTask).orElse(null);
 	}
 

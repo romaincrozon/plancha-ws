@@ -14,15 +14,17 @@ public class CalendarList {
 
 	public CalendarList(CalendarRange calendarRange) {
 
- 		Calendar begin = CalendarUtils.stringToDate(calendarRange.getStartDate());
-		Calendar end = CalendarUtils.stringToDate(calendarRange.getEndDate());
+ 		Calendar begin = calendarRange.getStartDate();
+		Calendar end = calendarRange.getEndDate();
 		
 		if (begin != null && end != null) {
 			if (!begin.before(end)) {
 				System.out.println("End date before begin date");
 			}
-	
-			this.planchaCalendarList.add(new PlanchaCalendar(CalendarUtils.createCalendar(begin)));
+			PlanchaCalendar planchaCalendarBegin = new PlanchaCalendar(CalendarUtils.createCalendar(begin));
+			List<PlanchaCalendar> weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
+			this.planchaCalendarList.add(planchaCalendarBegin);
+			weekPlanchaCalendar.add(planchaCalendarBegin);
 			int currentMonth = begin.get(Calendar.MONTH);
 			int currentWeek = begin.get(Calendar.WEEK_OF_YEAR);
 			int numberOfDaysInMonth = 1;
@@ -38,21 +40,23 @@ public class CalendarList {
 					numberOfDaysInMonth = 0;
 				}
 				if (newCalendar.get(Calendar.WEEK_OF_YEAR) != currentWeek) {
-					this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek));
+					this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 					currentWeek = newCalendar.get(Calendar.WEEK_OF_YEAR);
-					
+					weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
 					numberOfDaysInWeek = 0;
 				}
-				numberOfDaysInMonth++;
-	//			if (CalendarUtils.isWeekDay(newCalendar)){
-					this.planchaCalendarList.add(new PlanchaCalendar(newCalendar));
+				if (CalendarUtils.isWeekDay(newCalendar)){
+					PlanchaCalendar planchaCalendar = new PlanchaCalendar(newCalendar);
+					this.planchaCalendarList.add(planchaCalendar);
+					weekPlanchaCalendar.add(planchaCalendar);
+					numberOfDaysInMonth++;
 					numberOfDaysInWeek++;
-	//			}
+				}
 			}
 			if (numberOfDaysInMonth > 0)
 				this.monthList.add(new PlanchaMonth(currentMonth, CalendarUtils.getMonth(currentMonth), numberOfDaysInMonth));
 			if (numberOfDaysInWeek > 0)
-				this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek));
+				this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 		}
 	}
 	

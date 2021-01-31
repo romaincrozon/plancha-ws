@@ -27,7 +27,7 @@ public class AssignmentController {
 	}
 	
 	@GetMapping(value = "/assignment/{idResource}", produces = "application/json")
-	public Assignment getAssignment(@PathVariable long idAssignment) {
+	public Assignment getAssignment(@PathVariable Long idAssignment) {
 		return assignmentRepository.findById(idAssignment).orElse(null);
 	}	
 

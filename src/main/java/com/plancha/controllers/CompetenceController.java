@@ -27,7 +27,7 @@ public class CompetenceController {
 	}
 
 	@GetMapping(value = "/competence/{idCompetence}", produces = "application/json")
-	public Competence getCompetence(@PathVariable long idCompetence) {
+	public Competence getCompetence(@PathVariable Long idCompetence) {
 		return competenceRepository.findById(idCompetence).orElse(null);
 	}
 

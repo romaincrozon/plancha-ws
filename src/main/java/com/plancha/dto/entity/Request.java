@@ -16,20 +16,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.plancha.serializer.ProjectSerializer;
 
 @Entity
 @Table(name = "request")
-//@JsonIdentityInfo(
-//  generator = ObjectIdGenerators.PropertyGenerator.class, 
-//  property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+property  = "id", 
+scope     = Long.class)
 public class Request {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
     private int daysPerWeek;
     private int totalDays;
@@ -54,11 +57,11 @@ public class Request {
     @JsonSerialize(using = ProjectSerializer.class)
     private Project project;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

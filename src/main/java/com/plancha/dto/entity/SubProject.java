@@ -16,20 +16,27 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "subProject")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+property  = "id", 
+scope     = Long.class)
 public class SubProject {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.IDENTITY ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
     @JsonBackReference(value="subProject-project")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Project project; 
 
 	private String name; 
@@ -40,10 +47,10 @@ public class SubProject {
 	@OrderBy("name ASC")
 	private Set<Task> taskList;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public Project getProject() {

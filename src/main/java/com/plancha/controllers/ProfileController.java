@@ -28,7 +28,7 @@ public class ProfileController {
 	}
 
 	@GetMapping(value = "/profile/{idProfile}", produces = "application/json")
-	public Profile getProfile(@PathVariable long idProfile) {
+	public Profile getProfile(@PathVariable Long idProfile) {
 		return profileRepository.findById(idProfile).orElse(null);
 	}
 

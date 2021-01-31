@@ -32,5 +32,4 @@ public class Utils {
 	public static List<String> replaceValuesInMap(Map<String, String> map){
 		return map.values().stream().map(value -> value.replace("'", "''")).collect(Collectors.toList());
 	}
-	
 }

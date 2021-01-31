@@ -13,25 +13,32 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.plancha.serializer.RequestSerializer;
 
 @Entity
 @Table(name = "project")
-//@JsonIdentityInfo(
-//  generator = ObjectIdGenerators.PropertyGenerator.class, 
-//  property = "name")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+	property  = "id", 
+	scope     = Long.class)
 public class Project {
 	
     @Id
     @GeneratedValue( strategy= GenerationType.IDENTITY ) 	
     @Column(columnDefinition = "serial")
-    private long id; 
+    private Long id; 
 
 	private String name; 
 	private String status;
 	private int confidencePercentage;
+
+//	private float soldWorkload;
+//	private float soldWorkload;
+//	private float soldWorkload;
 
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = SubProject.class, mappedBy = "project")
     @JsonManagedReference(value="subProject-project")
@@ -39,6 +46,7 @@ public class Project {
 	private Set<SubProject> subProjectList;
 
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Resource.class)
+//    @JsonManagedReference(value="resource-project")
     private Set<Resource> resourceList;
 
     @OneToMany(cascade = { CascadeType.ALL }, targetEntity = Request.class, mappedBy = "project")
@@ -46,10 +54,10 @@ public class Project {
     @JsonSerialize(using = RequestSerializer.class)
 	private Set<Request> requestList;
     
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -93,5 +101,11 @@ public class Project {
 	}
 	public void setResourceList(Set<Resource> resourceList) {
 		this.resourceList = resourceList;
+	}
+	public Set<Request> getRequestList() {
+		return requestList;
+	}
+	public void setRequestList(Set<Request> requestList) {
+		this.requestList = requestList;
 	}
 }

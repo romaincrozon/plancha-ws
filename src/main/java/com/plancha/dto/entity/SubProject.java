@@ -42,10 +42,18 @@ public class SubProject {
 	private String name; 
 	private String status;
 
+	private float soldWorkload;
+	private float challengedWorkload;
+	private float consumedWorkload;
+
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Task.class, mappedBy = "subProject")
     @JsonManagedReference(value="task-subProject")
 	@OrderBy("name ASC")
 	private Set<Task> taskList;
+	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
+    private Color color;
 	
 	public Long getId() {
 		return id;
@@ -70,6 +78,24 @@ public class SubProject {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public float getSoldWorkload() {
+		return soldWorkload;
+	}
+	public void setSoldWorkload(float soldWorkload) {
+		this.soldWorkload = soldWorkload;
+	}
+	public float getChallengedWorkload() {
+		return challengedWorkload;
+	}
+	public void setChallengedWorkload(float challengedWorkload) {
+		this.challengedWorkload = challengedWorkload;
+	}
+	public float getConsumedWorkload() {
+		return consumedWorkload;
+	}
+	public void setConsumedWorkload(float consumedWorkload) {
+		this.consumedWorkload = consumedWorkload;
 	}
 	public Set<Task> getTaskList() {
 		return taskList;

@@ -9,10 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -55,9 +58,13 @@ public class Resource {
 //    @JsonManagedReference(value="profile-resource")
 	private Set<Profile> profiles;
 
-	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Assignment.class, mappedBy = "resource", fetch = FetchType.EAGER)
+    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = Assignment.class, mappedBy = "resource", fetch = FetchType.EAGER)
     @JsonManagedReference(value="assignment-resource")
 	private Set<Assignment> assignments;
+    
+    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = TodoItem.class, mappedBy = "resource", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="todo-resource")
+	private Set<TodoItem> todoItems;
     
 	public Resource(Long id) {
 		this.id = id;

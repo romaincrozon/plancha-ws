@@ -35,7 +35,15 @@ public class Task {
 
 	private String name; 
 	private String status;
-//	private TaskType typeTask;
+	
+	@JsonBackReference(value="task-taskType")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeTask_id", referencedColumnName = "id")
+	private TaskType taskType;
+
+	private float soldWorkload;
+	private float challengedWorkload;
+	private float consumedWorkload;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = ResourceCalendar.class, mappedBy = "task")
 //	@JsonManagedReference(value="task-resourceCalendar")
@@ -82,5 +90,29 @@ public class Task {
 	}
 	public void setResourceCalendars(Set<ResourceCalendar> resourceCalendars) {
 		this.resourceCalendars = resourceCalendars;
+	}
+	public TaskType getTaskType() {
+		return taskType;
+	}
+	public void setTaskType(TaskType taskType) {
+		this.taskType = taskType;
+	}
+	public float getSoldWorkload() {
+		return soldWorkload;
+	}
+	public void setSoldWorkload(float soldWorkload) {
+		this.soldWorkload = soldWorkload;
+	}
+	public float getChallengedWorkload() {
+		return challengedWorkload;
+	}
+	public void setChallengedWorkload(float challengedWorkload) {
+		this.challengedWorkload = challengedWorkload;
+	}
+	public float getConsumedWorkload() {
+		return consumedWorkload;
+	}
+	public void setConsumedWorkload(float consumedWorkload) {
+		this.consumedWorkload = consumedWorkload;
 	}
 }

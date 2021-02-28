@@ -53,6 +53,13 @@ public class CalendarController {
 
 	@PostMapping(value = "/dailyCalendarItem", consumes = "application/json", produces = "application/json")
 	public CalendarItem postResourceCalendar(@RequestBody DayItem dayItem) {
+		if (dayItem.getId() != null) {
+			CalendarItem calendarItem = calendarItemRepository.findById(dayItem.getId()).orElse(null);
+			if (calendarItem != null) {
+				calendarItem.setValue(dayItem.getValue());
+				return calendarItemRepository.save(calendarItem);
+			}
+		}
 		ResourceCalendar resourceCalendar = resourceCalendarRepository.findById(dayItem.getResourceCalendarId()).orElse(null);
 		if (resourceCalendar != null) {
 			CalendarItem calendarItem = dayItem.toCalendarItem(resourceCalendar);

@@ -5,14 +5,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,9 +40,10 @@ public class Project {
 	private String status;
 	private int confidencePercentage;
 
-//	private float soldWorkload;
-//	private float soldWorkload;
-//	private float soldWorkload;
+	private float soldWorkload;
+	private float challengedWorkload;
+	private float consumedWorkload;
+	private float projectMargin;
 
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = SubProject.class, mappedBy = "project")
     @JsonManagedReference(value="subProject-project")
@@ -53,6 +58,11 @@ public class Project {
 //    @JsonManagedReference(value="request-project")
     @JsonSerialize(using = RequestSerializer.class)
 	private Set<Request> requestList;
+
+//	@JsonManagedReference(value="project-color")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
+    private Color color;
     
 	public Long getId() {
 		return id;
@@ -107,5 +117,35 @@ public class Project {
 	}
 	public void setRequestList(Set<Request> requestList) {
 		this.requestList = requestList;
+	}
+	public float getSoldWorkload() {
+		return soldWorkload;
+	}
+	public void setSoldWorkload(float soldWorkload) {
+		this.soldWorkload = soldWorkload;
+	}
+	public float getChallengedWorkload() {
+		return challengedWorkload;
+	}
+	public void setChallengedWorkload(float challengedWorkload) {
+		this.challengedWorkload = challengedWorkload;
+	}
+	public float getConsumedWorkload() {
+		return consumedWorkload;
+	}
+	public void setConsumedWorkload(float consumedWorkload) {
+		this.consumedWorkload = consumedWorkload;
+	}
+	public float getProjectMargin() {
+		return projectMargin;
+	}
+	public void setProjectMargin(float projectMargin) {
+		this.projectMargin = projectMargin;
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

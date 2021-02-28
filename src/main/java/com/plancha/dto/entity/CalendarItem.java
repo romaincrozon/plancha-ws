@@ -32,6 +32,7 @@ public class CalendarItem {
     private Calendar calendar;
     private boolean isHoliday;
     private float value;
+    private float previsionalValue;
 
 	@JsonBackReference(value="resourceCalendar-calendarItem")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,6 +68,12 @@ public class CalendarItem {
 	}
 	public void setValue(float value) {
 		this.value = value;
+	}
+	public float getPrevisionalValue() {
+		return previsionalValue;
+	}
+	public void setPrevisionalValue(float previsionalValue) {
+		this.previsionalValue = previsionalValue;
 	}
 	
 }

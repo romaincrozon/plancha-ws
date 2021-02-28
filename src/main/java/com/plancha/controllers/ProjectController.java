@@ -138,19 +138,17 @@ public class ProjectController {
     }
     
     //TODO : saveOrUpdate subproject
-	
-	@DeleteMapping(value = "/project", consumes = "application/json", produces = "application/json")
-	public void deleteProject(@RequestBody Project project) {
-		projectRepository.delete(project);
-	}	
 
-	@DeleteMapping(value = "/subProject", consumes = "application/json", produces = "application/json")
-	public void deleteSubProject(@RequestBody SubProject subProject) {
-		subProjectRepository.delete(subProject);
+	@DeleteMapping(value = "/project/{idProject}")
+	public void deleteProject(@PathVariable Long idProject) {
+		projectRepository.deleteById(idProject);
 	}	
-	
-	@DeleteMapping(value = "/task", consumes = "application/json", produces = "application/json")
-	public void deleteTask(@RequestBody Task task) {
-		taskRepository.delete(task);
+	@DeleteMapping(value = "/subProject/{idSubProject}", consumes = "application/json", produces = "application/json")
+	public void deleteSubProject(@PathVariable Long idSubProject) {
+		subProjectRepository.deleteById(idSubProject);
+	}	
+	@DeleteMapping(value = "/task/{idTask}", consumes = "application/json", produces = "application/json")
+	public void deleteTask(@PathVariable Long idTask) {
+		taskRepository.deleteById(idTask);
 	}	
 }

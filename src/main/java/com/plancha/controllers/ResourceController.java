@@ -51,8 +51,8 @@ public class ResourceController {
 		return resourceRepository.save(resource);
 	}
 
-	@DeleteMapping(value = "/resource", consumes = "application/json", produces = "application/json")
-	public void deleteResource(@RequestBody Resource resource) {
-		resourceRepository.delete(resource);
+	@DeleteMapping(value = "/resource/{idResource}")
+	public void deleteResource(@PathVariable Long idResource) {
+		resourceRepository.deleteById(idResource);
 	}
 }

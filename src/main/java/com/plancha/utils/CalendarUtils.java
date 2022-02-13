@@ -20,9 +20,13 @@ public class CalendarUtils {
 	private static final int OFFSET_DAY = 1;
 
 	public static Calendar createCalendar(Calendar calendar) {
+		return createCalendar(calendar, OFFSET_HOUR);
+	}
+	
+	public static Calendar createCalendar(Calendar calendar, int offset) {
 		Calendar newCalendar = Calendar.getInstance();
 		newCalendar.setTime(calendar.getTime());
-		newCalendar.add(Calendar.HOUR, OFFSET_HOUR);
+		newCalendar.add(Calendar.HOUR, offset);
 		return newCalendar;
 	}
 	
@@ -46,7 +50,19 @@ public class CalendarUtils {
 		}
 		return calendars;
 	}
-
+	
+	public static Calendar getFirstDayOfTheWeek(Calendar calendar) {
+		Calendar c = createCalendar(calendar, 0);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return c;
+	}
+	
+	public static Calendar addWeeks(Calendar calendar, int nbWeeks) {
+		Calendar c = createCalendar(calendar, 0);
+		c.add(Calendar.DATE, nbWeeks * 7 - 1);
+		return c;
+	}
+	
 	public static String getMonth(int month) {
 		HashMap<Integer, String> mapMonth = new HashMap<Integer, String>();
         

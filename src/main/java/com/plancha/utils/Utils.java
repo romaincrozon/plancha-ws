@@ -1,6 +1,5 @@
 package com.plancha.utils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,4 +31,13 @@ public class Utils {
 	public static List<String> replaceValuesInMap(Map<String, String> map){
 		return map.values().stream().map(value -> value.replace("'", "''")).collect(Collectors.toList());
 	}
+	
+//	public static Status getDefaultStatus(StatusRepository statusRepository) {
+//		Status defaultStatus = statusRepository.findByDefaultStatus(true);
+//		if (defaultStatus == null) {
+//			final List<Status> statusList = statusRepository.findAll();
+//			return !statusList.isEmpty() ? statusList.get(0) : null;
+//		}
+//		return defaultStatus;
+//	}	
 }

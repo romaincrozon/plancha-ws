@@ -25,19 +25,34 @@ public class NeedController {
 	public List<Need> getAllNeeds() {
 		return needRepository.findAll();
 	}
-	
-	@GetMapping(value = "/need/{idResource}", produces = "application/json")
-	public Need getNeed(@PathVariable Long idNeed) {
-		return needRepository.findById(idNeed).orElse(null);
-	}	
 
+	@GetMapping(value = "/need/project", produces = "application/json")
+	public List<Need> getProjectNeeds() {
+		return needRepository.findByIsProjectNeed(true);
+	}
+	
+	@GetMapping(value = "/need/team", produces = "application/json")
+	public List<Need> getTeamNeeds() {
+		return needRepository.findByIsProjectNeed(false);
+	}
+
+	@GetMapping(value = "/need/project/{idProject}", produces = "application/json")
+	public List<Need> getNeedsByProject(@PathVariable Long idProject) {
+		return needRepository.findByProjectId(idProject);
+	}
+	
+//	@GetMapping(value = "/need/project/{idProject}", produces = "application/json")
+//	public List<Need> getNeedsByProject(@PathVariable Long idProject) {
+//		return needRepository.findByProjectId(idProject);
+//	}
+	
 	@PostMapping(value = "/need", consumes = "application/json", produces = "application/json")
-	public Need postNeed(@RequestBody Need need) {
+	public Need postNeedProject(@RequestBody Need need) {
 		return needRepository.save(need);
 	}	
 	
 	@DeleteMapping(value = "/need", consumes = "application/json", produces = "application/json")
-	public void deleteNeed(@RequestBody Need need) {
+	public void deleteNeedProject(@RequestBody Need need) {
 		needRepository.delete(need);
 	}	
 }

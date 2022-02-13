@@ -12,7 +12,7 @@ public class CalendarList {
 	private List<PlanchaMonth> monthList = new ArrayList<PlanchaMonth>();
 	private List<PlanchaWeek> weekList = new ArrayList<PlanchaWeek>();
 
-	public CalendarList(CalendarRange calendarRange) {
+	public CalendarList(CalendarRange calendarRange, boolean isWeekView) {
 
  		Calendar begin = calendarRange.getStartDate();
 		Calendar end = calendarRange.getEndDate();
@@ -29,18 +29,20 @@ public class CalendarList {
 			int currentWeek = begin.get(Calendar.WEEK_OF_YEAR);
 			int numberOfDaysInMonth = 1;
 			int numberOfDaysInWeek = 1;
+			int year = begin.get(Calendar.YEAR);
 			
 			while (!begin.getTime().equals(end.getTime())) {
 				Calendar newCalendar = CalendarUtils.createCalendar(begin);
 				CalendarUtils.incrementeCalendarOneDay(newCalendar);
 				CalendarUtils.incrementeCalendarOneDay(begin);
+				year = newCalendar.get(Calendar.YEAR);
 				if (newCalendar.get(Calendar.MONTH) != currentMonth) {
 					this.monthList.add(new PlanchaMonth(currentMonth, CalendarUtils.getMonth(currentMonth), numberOfDaysInMonth));
 					currentMonth = newCalendar.get(Calendar.MONTH);
 					numberOfDaysInMonth = 0;
 				}
 				if (newCalendar.get(Calendar.WEEK_OF_YEAR) != currentWeek) {
-					this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
+					this.weekList.add(new PlanchaWeek(year, currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 					currentWeek = newCalendar.get(Calendar.WEEK_OF_YEAR);
 					weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
 					numberOfDaysInWeek = 0;
@@ -56,7 +58,7 @@ public class CalendarList {
 			if (numberOfDaysInMonth > 0)
 				this.monthList.add(new PlanchaMonth(currentMonth, CalendarUtils.getMonth(currentMonth), numberOfDaysInMonth));
 			if (numberOfDaysInWeek > 0)
-				this.weekList.add(new PlanchaWeek(currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
+				this.weekList.add(new PlanchaWeek(year, currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 		}
 	}
 	

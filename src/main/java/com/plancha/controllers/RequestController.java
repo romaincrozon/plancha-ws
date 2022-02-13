@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.plancha.dto.entity.Project;
 import com.plancha.dto.entity.Request;
 import com.plancha.repositories.ProjectRepository;
 import com.plancha.repositories.RequestRepository;

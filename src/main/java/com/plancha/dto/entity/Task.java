@@ -17,8 +17,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -26,17 +24,16 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
 property  = "id", 
 scope     = Long.class)
-public class Task {
+public class Task extends com.plancha.dto.entity.Entity{
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
     private Long id; 
 
-	private String name; 
 	private String status;
 	
-	@JsonBackReference(value="task-taskType")
+//	@JsonManagedReference(value="task-taskType")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeTask_id", referencedColumnName = "id")
 	private TaskType taskType;
@@ -54,7 +51,17 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subProject_id", referencedColumnName = "id")
     private SubProject subProject; 
-	
+
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;	
+	} 
+
 	public Task(Long id) {
 		this.id = id;
 	}
@@ -66,12 +73,6 @@ public class Task {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 	public String getStatus() {
 		return status;

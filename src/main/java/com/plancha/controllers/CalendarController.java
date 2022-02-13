@@ -40,17 +40,23 @@ public class CalendarController {
 	public List<DayItem> getCalendarItemsByDate(@RequestBody CalendarRange calendarRange) {
 		return calendarItemRepository.findCalendarItemsByDate(calendarRange.getStartDate(), calendarRange.getEndDate());
 	}
-	
+
 	@PostMapping(value = "/calendar", consumes = "application/json", produces = "application/json")
 	public CalendarList getCalendarByDate(@RequestBody CalendarRange calendarRange) {
-		return new CalendarList(calendarRange);
+		return new CalendarList(calendarRange, false);
 	}		
 	
-	@PostMapping(value = "/calendarItem", consumes = "application/json", produces = "application/json")
-	public CalendarItem postCalendarItem(@RequestBody CalendarItem calendarItem) {
-		return calendarItemRepository.save(calendarItem);
-	}	
-
+	@PostMapping(value = "/calendar/week", consumes = "application/json", produces = "application/json")
+	public CalendarList getCalendarWeekByDate(@RequestBody CalendarRange calendarRange) {
+		return new CalendarList(calendarRange, true);
+	}		
+	
+	@PostMapping(value = "/calendar/nextweeks/{nbWeeks}", consumes = "application/json", produces = "application/json")
+	public CalendarList getCalendarByDate(@PathVariable int nbWeeks, @RequestBody CalendarRange calendarRange) {
+//		System.out.println("toto" + new CalendarRange(nbWeeks, calendarRange.getStartDate()));
+		return new CalendarList(new CalendarRange(nbWeeks, calendarRange.getStartDate()), false);
+	} 
+	
 	@PostMapping(value = "/dailyCalendarItem", consumes = "application/json", produces = "application/json")
 	public CalendarItem postResourceCalendar(@RequestBody DayItem dayItem) {
 		if (dayItem.getId() != null) {

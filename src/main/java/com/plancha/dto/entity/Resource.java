@@ -9,15 +9,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -38,6 +37,7 @@ public class Resource {
 	private String username;
 	private String password;
 	private String quadri;
+	private String role;
 	private int availabilityPerWeek;
 	private String token;
 	
@@ -49,22 +49,29 @@ public class Resource {
 //    @JsonBackReference(value="project-resource")
 	private Set<Task> tasks;
 
-    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Project.class, fetch = FetchType.EAGER)
+//    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Project.class, fetch = FetchType.LAZY)
 //    @JsonBackReference(value="resource-project")
-	@JsonIdentityReference(alwaysAsId = true)
+    @ManyToMany(mappedBy = "resourceList", fetch = FetchType.EAGER)
+//	@JsonIdentityReference(alwaysAsId = true)
 	private Set<Project> projects;
     
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class, fetch = FetchType.EAGER)
-//    @JsonManagedReference(value="profile-resource")
+//    @JsonSerialize(using = ListOnlyNameSerializer.class)
 	private Set<Profile> profiles;
 
     @OneToMany(cascade = { CascadeType.ALL }, targetEntity = Assignment.class, mappedBy = "resource", fetch = FetchType.EAGER)
     @JsonManagedReference(value="assignment-resource")
 	private Set<Assignment> assignments;
     
-    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = TodoItem.class, mappedBy = "resource", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="todo-resource")
-	private Set<TodoItem> todoItems;
+    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = TodoItem.class, mappedBy = "affectedTo", fetch = FetchType.EAGER)
+//    @JsonManagedReference(value="todo-affectedTo")
+    @JsonIgnore
+    private Set<TodoItem> affectedTodoItems;
+    
+    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = TodoItem.class, mappedBy = "createdBy", fetch = FetchType.EAGER)
+//    @JsonManagedReference(value="todo-createdBy")
+    @JsonIgnore
+	private Set<TodoItem> createdTodoItems;
     
 	public Resource(Long id) {
 		this.id = id;
@@ -148,6 +155,24 @@ public class Resource {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public Set<TodoItem> getAffectedTodoItems() {
+		return affectedTodoItems;
+	}
+	public void setAffectedTodoItems(Set<TodoItem> affectedTodoItems) {
+		this.affectedTodoItems = affectedTodoItems;
+	}
+	public Set<TodoItem> getCreatedTodoItems() {
+		return createdTodoItems;
+	}
+	public void setCreatedTodoItems(Set<TodoItem> createdTodoItems) {
+		this.createdTodoItems = createdTodoItems;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

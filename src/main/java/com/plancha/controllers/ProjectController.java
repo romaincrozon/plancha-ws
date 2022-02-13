@@ -1,8 +1,6 @@
 package com.plancha.controllers;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,17 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.plancha.dto.CalendarList;
-import com.plancha.dto.CalendarRange;
-import com.plancha.dto.PlanchaCalendar;
-import com.plancha.dto.entity.CalendarItem;
 import com.plancha.dto.entity.Project;
+import com.plancha.dto.entity.Resource;
 import com.plancha.dto.entity.SubProject;
 import com.plancha.dto.entity.Task;
 import com.plancha.repositories.ProjectRepository;
+import com.plancha.repositories.ResourceRepository;
 import com.plancha.repositories.SubProjectRepository;
 import com.plancha.repositories.TaskRepository;
-import com.plancha.utils.CalendarUtils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -38,6 +33,9 @@ public class ProjectController {
 
 	@Autowired
 	private TaskRepository taskRepository;
+	
+	@Autowired
+	private ResourceRepository resourceRepository;
 
 	@GetMapping(value = "/project", produces = "application/json")
 	public List<Project> getProjects() {
@@ -101,9 +99,13 @@ public class ProjectController {
 		return projectRepository.save(project);
 	}
 
-	@PostMapping(value = "/project/resource", consumes = "application/json", produces = "application/json")
-	public Project addResourceToProject(@RequestBody Project project) {
-//		project.getResourceList().stream().filter(resource -> )
+	@PostMapping(value = "/project/{projectId}/resource", consumes = "application/json", produces = "application/json")
+	public Project addResourceToProject(@PathVariable long projectId, @RequestBody Resource resource) {
+		Project project = projectRepository.findById(projectId).orElse(null);
+		Resource resourceObj = resourceRepository.findById(resource.getId()).orElse(null);
+		if (project != null && resourceObj != null) {
+			project.getResourceList().add(resourceObj);
+		}
 		return projectRepository.save(project);
 	}	
 
@@ -143,11 +145,11 @@ public class ProjectController {
 	public void deleteProject(@PathVariable Long idProject) {
 		projectRepository.deleteById(idProject);
 	}	
-	@DeleteMapping(value = "/subProject/{idSubProject}", consumes = "application/json", produces = "application/json")
+	@DeleteMapping(value = "/subProject/{idSubProject}")
 	public void deleteSubProject(@PathVariable Long idSubProject) {
 		subProjectRepository.deleteById(idSubProject);
 	}	
-	@DeleteMapping(value = "/task/{idTask}", consumes = "application/json", produces = "application/json")
+	@DeleteMapping(value = "/task/{idTask}")
 	public void deleteTask(@PathVariable Long idTask) {
 		taskRepository.deleteById(idTask);
 	}	

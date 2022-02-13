@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -25,7 +24,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class CalendarItem {
 
     @Id
-    @GeneratedValue( strategy= GenerationType.IDENTITY ) 	
+    @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
     private Long id; 
 
@@ -38,6 +37,16 @@ public class CalendarItem {
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "resourceCalendar_id", referencedColumnName = "id")
 	private ResourceCalendar resourceCalendar; 
+	
+	@JsonBackReference(value="needProject-calendarItem")
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "needProject_id", referencedColumnName = "id")
+	private Need needProject; 
+	
+	@JsonBackReference(value="availability-calendarItem")
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "availability_id", referencedColumnName = "id")
+	private Availability availability; 
 	
 	public Long getId() {
 		return id;

@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.plancha.serializer.ProjectSerializer;
@@ -34,6 +33,7 @@ public class Request {
     @Column(columnDefinition = "serial")
     private Long id; 
 
+    private int type;
     private int daysPerWeek;
     private int totalDays;
     private Calendar beginDate;
@@ -71,6 +71,14 @@ public class Request {
 
 	public void setAssignmentList(Set<Assignment> assignmentList) {
 		this.assignmentList = assignmentList;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public int getDaysPerWeek() {

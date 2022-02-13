@@ -1,6 +1,7 @@
 package com.plancha.dto.entity;
 
-import java.util.Set;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,46 +17,35 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(name = "resourceCalendar")
+@Table(name = "availability")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
-	property  = "id", 
-	scope     = Long.class)
-public class ResourceCalendar {
+property  = "id", 
+scope     = Long.class)
+public class Availability {
 	
     @Id
-    @GeneratedValue( strategy= GenerationType.IDENTITY ) 	
+    @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
     private Long id; 
+	private int implication;
+    private Calendar creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JsonBackReference(value="resourceCalendar-resource")
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Resource resource;
-    
-    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "resourceCalendar")
-    @JsonManagedReference(value="resourceCalendar-calendarItem")
-    @OrderBy(value = "calendar ASC")
-	private Set<CalendarItem> calendarItems;
+	private Resource resource;
 
-//	@JsonBackReference(value="task-resourceCalendar")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-    private Task task; 
+    @JoinColumn(name = "requestor_id", referencedColumnName = "id")
+    private Resource requestor;
 
-	public ResourceCalendar(Long taskId, Long resourceId) {
-		this.task = new Task(taskId);
-		this.resource = new Resource(resourceId);
-	}
-	
-	public ResourceCalendar() {
-	}
+    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "availability")
+    @JsonManagedReference(value="availability-calendarItem")
+    @OrderBy(value = "calendar ASC")
+    private List<CalendarItem> calendarItems;
 
 	public Long getId() {
 		return id;
@@ -69,16 +59,28 @@ public class ResourceCalendar {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	public Set<CalendarItem> getCalendarItems() {
+	public Resource getRequestor() {
+		return requestor;
+	}
+	public void setRequestor(Resource requestor) {
+		this.requestor = requestor;
+	}
+	public List<CalendarItem> getCalendarItems() {
 		return calendarItems;
 	}
-	public void setCalendarItems(Set<CalendarItem> calendarItems) {
+	public void setCalendarItems(List<CalendarItem> calendarItems) {
 		this.calendarItems = calendarItems;
 	}
-	public Task getTask() {
-		return task;
+	public int getImplication() {
+		return implication;
 	}
-	public void setTask(Task task) {
-		this.task = task;
+	public void setImplication(int implication) {
+		this.implication = implication;
+	}
+	public Calendar getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Calendar creationDate) {
+		this.creationDate = creationDate;
 	}
 }

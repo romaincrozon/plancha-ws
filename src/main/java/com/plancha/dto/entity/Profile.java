@@ -1,43 +1,40 @@
 package com.plancha.dto.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.plancha.serializer.CompetenceSerializer;
 
 @Entity
 @Table(name = "profile")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
 property  = "id", 
 scope     = Long.class)
-public class Profile {
+public class Profile extends com.plancha.dto.entity.Entity{
 	
     @Id
     @GeneratedValue( strategy= GenerationType.AUTO ) 	
     @Column(columnDefinition = "serial")
     private Long id; 
 
-	private String name; 
-
-    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class)
-//    @JoinTable(name = "profile_competence", 
-//    	joinColumns = @JoinColumn(name = "profile_id"), 
-//    	inverseJoinColumns = @JoinColumn(name = "competence_id"))
-    private Set<Competence> competenceList;
+    @ManyToMany(mappedBy = "profile", fetch = FetchType.EAGER)
+    @JsonSerialize(using = CompetenceSerializer.class)
+    private List<Competence> competences;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Request.class)
     @JsonManagedReference(value="profile-request")
@@ -45,6 +42,16 @@ public class Profile {
 
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Resource.class)
     private Set<Resource> resourceList;
+
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;	
+	} 
 
 	public Long getId() {
 		return id;
@@ -54,20 +61,12 @@ public class Profile {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public List<Competence> getCompetences() {
+		return competences;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<Competence> getCompetenceList() {
-		return competenceList;
-	}
-
-	public void setCompetenceList(Set<Competence> competenceList) {
-		this.competenceList = competenceList;
+	public void setCompetences(List<Competence> competences) {
+		this.competences = competences;
 	}
 
 	public Set<Request> getRequestList() {

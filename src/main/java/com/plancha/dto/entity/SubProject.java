@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
 property  = "id", 
 scope     = Long.class)
-public class SubProject {
+public class SubProject extends com.plancha.dto.entity.Entity{
 	
     @Id
     @GeneratedValue( strategy= GenerationType.IDENTITY ) 	
@@ -39,22 +39,28 @@ public class SubProject {
     @JsonIdentityReference(alwaysAsId = true)
     private Project project; 
 
-	private String name; 
 	private String status;
 
 	private float soldWorkload;
 	private float challengedWorkload;
 	private float consumedWorkload;
+	private String color;
 
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = Task.class, mappedBy = "subProject")
     @JsonManagedReference(value="task-subProject")
 	@OrderBy("name ASC")
 	private Set<Task> taskList;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "color_id", referencedColumnName = "id")
-    private Color color;
-	
+
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;	
+	} 
+
 	public Long getId() {
 		return id;
 	}
@@ -66,12 +72,6 @@ public class SubProject {
 	}
 	public void setProject(Project project) {
 		this.project = project;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 	public String getStatus() {
 		return status;
@@ -102,5 +102,11 @@ public class SubProject {
 	}
 	public void setTaskList(Set<Task> taskList) {
 		this.taskList = taskList;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
 	}
 }

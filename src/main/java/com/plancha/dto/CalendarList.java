@@ -48,9 +48,11 @@ public class CalendarList {
 					numberOfDaysInWeek = 0;
 				}
 				if (CalendarUtils.isWeekDay(newCalendar)){
-					PlanchaCalendar planchaCalendar = new PlanchaCalendar(newCalendar);
-					this.planchaCalendarList.add(planchaCalendar);
-					weekPlanchaCalendar.add(planchaCalendar);
+					if (CalendarUtils.isFirstDayOfTheWeek(newCalendar)){
+						PlanchaCalendar planchaCalendar = new PlanchaCalendar(newCalendar);
+						this.planchaCalendarList.add(planchaCalendar);
+						weekPlanchaCalendar.add(planchaCalendar);
+					}
 					numberOfDaysInMonth++;
 					numberOfDaysInWeek++;
 				}

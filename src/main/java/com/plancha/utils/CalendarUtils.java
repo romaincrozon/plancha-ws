@@ -38,6 +38,9 @@ public class CalendarUtils {
 		return !(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || 
 			    calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY);
 	}
+	public static boolean isFirstDayOfTheWeek(Calendar calendar) {
+		return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY;
+	}
 	
 	public static List<Calendar> getWeekFromCalendar(Calendar calendar) {
 		List<Calendar> calendars = new ArrayList<Calendar>();

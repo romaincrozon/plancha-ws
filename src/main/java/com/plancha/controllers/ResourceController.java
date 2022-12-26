@@ -37,7 +37,7 @@ public class ResourceController {
     }
 
 	@GetMapping(value = "/resource", produces = "application/json")
-	public List<Resource> getAllResources() {
+	public List<Resource> getResources() {
 		return resourceRepository.findAll();
 	}
 

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.plancha.dto.entity.Project;
 import com.plancha.dto.entity.TodoItem;
 import com.plancha.repositories.TodoItemRepository;
 

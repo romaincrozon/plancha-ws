@@ -51,11 +51,11 @@ public class Request {
 	private Set<Assignment> assignmentList;
     
 //    @JsonBackReference(value="request-project")
-    @ManyToOne
+//    @ManyToOne
 //    (fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
-    @JsonSerialize(using = ProjectSerializer.class)
-    private Project project;
+//    @JoinColumn(name = "project_id", referencedColumnName = "id")
+//    @JsonSerialize(using = ProjectSerializer.class)
+//    private Project project;
 
 	public Long getId() {
 		return id;
@@ -129,13 +129,13 @@ public class Request {
 		this.status = status;
 	}
 
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
+//	public Project getProject() {
+//		return project;
+//	} 
+//
+//	public void setProject(Project project) {
+//		this.project = project;
+//	}
     
 
     

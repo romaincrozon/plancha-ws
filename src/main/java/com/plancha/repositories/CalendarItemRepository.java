@@ -17,7 +17,7 @@ public interface CalendarItemRepository extends JpaRepository<CalendarItem, Long
 			+ "INNER JOIN ResourceCalendar as rc " 
 			+ "ON ci.resourceCalendar.id = rc.id "
 			+ "WHERE ci.calendar BETWEEN :startDate and :endDate "
-			+ "ORDER BY rc.task.id, rc.resource.id")
+			+ "ORDER BY rc.project.id, rc.resource.id")
 	List<DayItem> findCalendarItemsByDate(@Param("startDate") Calendar startDate, @Param("endDate") Calendar endDate);
 	
 

@@ -32,8 +32,8 @@ public class RequestController {
 		List<Request> requests = requestRepository.findAll();
 		List<Request> requestsWithProjectName = new ArrayList<Request>();
 		for(Request request : requests) {
-			Long id = request.getProject().getId();
-			request.setProject(projectRepository.findById(id).orElse(null));
+//			Long id = request.getProject().getId();
+//			request.setProject(projectRepository.findById(id).orElse(null));
 //			request.getProject().setName(projectRepository.findNameById(request.getProject().getId()));
 //			requestsWithProjectName.add(request);
 		}
@@ -45,10 +45,10 @@ public class RequestController {
 		return requestRepository.findById(idRequest).orElse(null);
 	}
 	
-	@GetMapping(value = "/request/project/{idProject}", produces = "application/json")
-	public List<Request> getRequestsByProject(@PathVariable Long idProject) {
-		return requestRepository.findByProjectId(idProject);
-	}
+//	@GetMapping(value = "/request/project/{idProject}", produces = "application/json")
+//	public List<Request> getRequestsByProject(@PathVariable Long idProject) {
+//		return requestRepository.findByProjectId(idProject);
+//	}
 
 	@PostMapping(value = "/request", consumes = "application/json", produces = "application/json")
 	public Request postRequestProfile(@RequestBody Request request) {

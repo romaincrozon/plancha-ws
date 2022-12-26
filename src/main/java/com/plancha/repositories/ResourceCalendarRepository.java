@@ -13,7 +13,7 @@ import com.plancha.dto.entity.ResourceCalendar;
 
 public interface ResourceCalendarRepository extends JpaRepository<ResourceCalendar, Long> {
 	
-	public Optional<ResourceCalendar> findByTaskIdAndResourceId(final Long taskId, final Long resourceId);
+	public Optional<ResourceCalendar> findByProjectIdAndResourceId(final Long projectId, final Long resourceId);
 	
 //	@Query("SELECT new com.plancha.dto.ResourceCalendar(rc.id, ci.calendar, ci.value, rc.id) "
 //			+ "FROM CalendarItem as ci "
@@ -28,9 +28,9 @@ public interface ResourceCalendarRepository extends JpaRepository<ResourceCalend
 			+ "LEFT JOIN CalendarItem as ci "
 			+ "ON ci.resourceCalendar.id = rc.id "
 			+ "WHERE ci.calendar BETWEEN :startDate and :endDate "
-			+ "AND rc.task.id = :taskId "
+			+ "AND rc.project.id = :projectId "
 			+ "ORDER BY rc.resource.id")
-	List<ResourceCalendar> findResourceCalendarByDateAndTask(@Param("startDate") Calendar startDate, @Param("endDate") Calendar endDate, @Param("taskId") Long taskId);
+	List<ResourceCalendar> findResourceCalendarByDateAndProject(@Param("startDate") Calendar startDate, @Param("endDate") Calendar endDate, @Param("projectId") Long projectId);
 	
 
 

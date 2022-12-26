@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plancha.utils.CalendarUtils;
 
 public class CalendarList {
@@ -14,14 +16,14 @@ public class CalendarList {
 
 	public CalendarList(CalendarRange calendarRange, boolean isWeekView) {
 
- 		Calendar begin = calendarRange.getStartDate();
+		Calendar begin = calendarRange.getStartDate();
 		Calendar end = calendarRange.getEndDate();
 		
 		if (begin != null && end != null) {
 			if (!begin.before(end)) {
 				System.out.println("End date before begin date");
 			}
-			PlanchaCalendar planchaCalendarBegin = new PlanchaCalendar(CalendarUtils.createCalendar(begin));
+			PlanchaCalendar planchaCalendarBegin = new PlanchaCalendar(CalendarUtils.createCalendar(begin), 1);
 			List<PlanchaCalendar> weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
 			this.planchaCalendarList.add(planchaCalendarBegin);
 			weekPlanchaCalendar.add(planchaCalendarBegin);
@@ -29,6 +31,7 @@ public class CalendarList {
 			int currentWeek = begin.get(Calendar.WEEK_OF_YEAR);
 			int numberOfDaysInMonth = 1;
 			int numberOfDaysInWeek = 1;
+			int dayNumberInWeek = 2;
 			int year = begin.get(Calendar.YEAR);
 			
 			while (!begin.getTime().equals(end.getTime())) {
@@ -46,15 +49,15 @@ public class CalendarList {
 					currentWeek = newCalendar.get(Calendar.WEEK_OF_YEAR);
 					weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
 					numberOfDaysInWeek = 0;
+					dayNumberInWeek = 1;
 				}
 				if (CalendarUtils.isWeekDay(newCalendar)){
-					if (CalendarUtils.isFirstDayOfTheWeek(newCalendar)){
-						PlanchaCalendar planchaCalendar = new PlanchaCalendar(newCalendar);
-						this.planchaCalendarList.add(planchaCalendar);
-						weekPlanchaCalendar.add(planchaCalendar);
-					}
+					PlanchaCalendar planchaCalendar = new PlanchaCalendar(newCalendar, dayNumberInWeek);
+					this.planchaCalendarList.add(planchaCalendar);
+					weekPlanchaCalendar.add(planchaCalendar);
 					numberOfDaysInMonth++;
 					numberOfDaysInWeek++;
+					dayNumberInWeek++;
 				}
 			}
 			if (numberOfDaysInMonth > 0)
@@ -62,6 +65,14 @@ public class CalendarList {
 			if (numberOfDaysInWeek > 0)
 				this.weekList.add(new PlanchaWeek(year, currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 		}
+		try {
+			System.out.println(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(planchaCalendarList));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
 	}
 	
 	public List<PlanchaCalendar> getPlanchaCalendarList() {

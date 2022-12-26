@@ -33,24 +33,22 @@ public class ResourceCalendar {
     private Long id; 
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JsonBackReference(value="resourceCalendar-resource")
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
-    @JsonIdentityReference(alwaysAsId = true)
+//    @JsonIdentityReference(alwaysAsId = true)
     private Resource resource;
     
     @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "resourceCalendar")
     @JsonManagedReference(value="resourceCalendar-calendarItem")
     @OrderBy(value = "calendar ASC")
 	private Set<CalendarItem> calendarItems;
-
-//	@JsonBackReference(value="task-resourceCalendar")
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-    private Task task; 
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+//	@JsonIdentityReference(alwaysAsId = true)
+    private Project project; 
 
-	public ResourceCalendar(Long taskId, Long resourceId) {
-		this.task = new Task(taskId);
+	public ResourceCalendar(Long projectId, Long resourceId) {
+		this.project = new Project();
 		this.resource = new Resource(resourceId);
 	}
 	
@@ -73,12 +71,12 @@ public class ResourceCalendar {
 		return calendarItems;
 	}
 	public void setCalendarItems(Set<CalendarItem> calendarItems) {
-		this.calendarItems = calendarItems;
+		this.calendarItems = calendarItems; 
 	}
-	public Task getTask() {
-		return task;
+	public Project getProject() {
+		return project;
 	}
-	public void setTask(Task task) {
-		this.task = task;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 }

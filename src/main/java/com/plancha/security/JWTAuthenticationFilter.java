@@ -2,10 +2,6 @@ package com.plancha.security;
 
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static com.plancha.security.SecurityConstants.EXPIRATION_TIME;
-import static com.plancha.security.SecurityConstants.HEADER_STRING;
-import static com.plancha.security.SecurityConstants.SECRET;
-import static com.plancha.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,14 +61,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = JWT.create()
                 .withSubject(((User) auth.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
-        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+                .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .sign(HMAC512(SecurityConstants.SECRET.getBytes()));
+        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
         
         Resource resource = this.resourceRepository.findByUsername(((User) auth.getPrincipal()).getUsername());
         resource.setToken(token);
         resource.setResourceCalendars(null);
-        resource.setTasks(null);
         
         res.getWriter().write(new ObjectMapper().writeValueAsString(resource));
     }

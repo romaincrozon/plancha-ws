@@ -38,15 +38,15 @@ public class CalendarItem {
 	@JoinColumn(name = "resourceCalendar_id", referencedColumnName = "id")
 	private ResourceCalendar resourceCalendar; 
 	
-	@JsonBackReference(value="needProject-calendarItem")
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "needProject_id", referencedColumnName = "id")
-	private Need needProject; 
-	
-	@JsonBackReference(value="availability-calendarItem")
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "availability_id", referencedColumnName = "id")
-	private Availability availability; 
+//	@JsonBackReference(value="needProject-calendarItem")
+//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(columnDefinition="integer", name = "needProject_id", nullable = true) 
+//	private Need needProject; 
+//	
+//	@JsonBackReference(value="availability-calendarItem")
+//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(columnDefinition="integer", name = "availability_id", nullable = true)
+//	private Availability availability; 
 	
 	public Long getId() {
 		return id;
@@ -84,5 +84,17 @@ public class CalendarItem {
 	public void setPrevisionalValue(float previsionalValue) {
 		this.previsionalValue = previsionalValue;
 	}
+//	public Need getNeedProject() {
+//		return needProject;
+//	}
+//	public void setNeedProject(Need needProject) {
+//		this.needProject = needProject;
+//	}
+//	public Availability getAvailability() {
+//		return availability;
+//	}
+//	public void setAvailability(Availability availability) {
+//		this.availability = availability;
+//	}
 	
 }

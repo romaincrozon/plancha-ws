@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plancha.dto.CalendarRange;
-import com.plancha.dto.TaskResource;
+import com.plancha.dto.ProjectResource;
 import com.plancha.dto.entity.Project;
 import com.plancha.dto.entity.ResourceCalendar;
 import com.plancha.repositories.ResourceCalendarRepository;
@@ -30,25 +30,25 @@ public class ResourceCalendarController {
 		return resourceCalendarRepository.findAll();
 	}
 
-	@PostMapping(value = "/resourceCalendarsByDate/task/{taskId}", produces = "application/json")
-	public List<ResourceCalendar> getResourceCalendarsByDateAndTask(@PathVariable Long taskId, @RequestBody CalendarRange calendarRange) {
-		return resourceCalendarRepository.findResourceCalendarByDateAndTask(calendarRange.getStartDate(), calendarRange.getEndDate(), taskId);
+	@PostMapping(value = "/resourceCalendarsByDate/project/{projectId}", produces = "application/json")
+	public List<ResourceCalendar> getResourceCalendarsByDateAndProject(@PathVariable Long projectId, @RequestBody CalendarRange calendarRange) {
+		return resourceCalendarRepository.findResourceCalendarByDateAndProject(calendarRange.getStartDate(), calendarRange.getEndDate(), projectId);
 	}
 
 	@PostMapping(value = "/resourceCalendar", consumes = "application/json", produces = "application/json")
 	public ResourceCalendar postResourceCalendar(@RequestBody ResourceCalendar resourceCalendar) {
-		ResourceCalendar resourceCalendarInDatabase = resourceCalendarRepository.findByTaskIdAndResourceId(resourceCalendar.getTask().getId(), resourceCalendar.getResource().getId()).orElse(null); 
+		ResourceCalendar resourceCalendarInDatabase = resourceCalendarRepository.findByProjectIdAndResourceId(resourceCalendar.getProject().getId(), resourceCalendar.getResource().getId()).orElse(null); 
 		if (resourceCalendarInDatabase == null) {
 			return resourceCalendarRepository.save(resourceCalendar);
 		}
 		return resourceCalendarInDatabase; 
 	}
 	
-	@PostMapping(value = "/resourceCalendarByTaskAndResource", consumes = "application/json", produces = "application/json")
-	public ResourceCalendar postResourceCalendarFromTaskAndResource(@RequestBody TaskResource taskResource) {
-		ResourceCalendar resourceCalendarInDatabase = resourceCalendarRepository.findByTaskIdAndResourceId(taskResource.getTaskId(), taskResource.getResourceId()).orElse(null); 
+	@PostMapping(value = "/resourceCalendarByProjectAndResource", consumes = "application/json", produces = "application/json")
+	public ResourceCalendar postResourceCalendarFromProjectAndResource(@RequestBody ProjectResource projectResource) {
+		ResourceCalendar resourceCalendarInDatabase = resourceCalendarRepository.findByProjectIdAndResourceId(projectResource.getProjectId(), projectResource.getResourceId()).orElse(null); 
 		if (resourceCalendarInDatabase == null) {
-			ResourceCalendar resourceCalendar = new ResourceCalendar(taskResource.getTaskId(), taskResource.getResourceId());
+			ResourceCalendar resourceCalendar = new ResourceCalendar(projectResource.getProjectId(), projectResource.getResourceId());
 			return resourceCalendarRepository.save(resourceCalendar);
 		}
 		return resourceCalendarInDatabase; 

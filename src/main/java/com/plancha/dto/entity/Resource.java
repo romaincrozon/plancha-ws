@@ -42,18 +42,10 @@ public class Resource {
 	private String token;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = ResourceCalendar.class, mappedBy = "resource")
-//    @JsonManagedReference(value="resourceCalendar-resource")
 	private Set<ResourceCalendar> resourceCalendars;
 
-    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Task.class)
-//    @JsonBackReference(value="project-resource")
-	private Set<Task> tasks;
-
-//    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Project.class, fetch = FetchType.LAZY)
-//    @JsonBackReference(value="resource-project")
-    @ManyToMany(mappedBy = "resourceList", fetch = FetchType.EAGER)
-//	@JsonIdentityReference(alwaysAsId = true)
-	private Set<Project> projects;
+//    @ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER)
+//	private Set<Project> projects;
     
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class, fetch = FetchType.EAGER)
 //    @JsonSerialize(using = ListOnlyNameSerializer.class)
@@ -120,23 +112,17 @@ public class Resource {
 	public void setResourceCalendars(Set<ResourceCalendar> resourceCalendars) {
 		this.resourceCalendars = resourceCalendars;
 	}
-	public Set<Task> getTasks() {
-		return tasks;
-	}
-	public void setTasks(Set<Task> tasks) {
-		this.tasks = tasks;
-	}
-	public Set<Project> getProjects() {
-		return projects;
-	}
+//	public Set<Project> getProjects() {
+//		return projects;
+//	}
+//	public void setProjects(Set<Project> projects) {
+//		this.projects = projects;
+//	}
 	public String getUsername() {
 		return username;
 	}
 	public void setUsername(String username) {
 		this.username = username;
-	}
-	public void setProjects(Set<Project> projects) {
-		this.projects = projects;
 	}
 	public Set<Profile> getProfiles() {
 		return profiles;

@@ -69,18 +69,18 @@ public class CalendarUtils {
 	public static String getMonth(int month) {
 		HashMap<Integer, String> mapMonth = new HashMap<Integer, String>();
         
-        mapMonth.put(0, "Janvier");
-        mapMonth.put(1, "Février");
-        mapMonth.put(2, "Mars");
-        mapMonth.put(3, "Avril");
+        mapMonth.put(0, "Jan");
+        mapMonth.put(1, "Fév");
+        mapMonth.put(2, "Mar");
+        mapMonth.put(3, "Avr");
         mapMonth.put(4, "Mai");
-        mapMonth.put(5, "Juin");
-        mapMonth.put(6, "Juillet");
-        mapMonth.put(7, "Août");
-        mapMonth.put(8, "Septembre");
-        mapMonth.put(9, "Octobre");
-        mapMonth.put(10, "Novembre");
-        mapMonth.put(11, "Décembre");
+        mapMonth.put(5, "Jui");
+        mapMonth.put(6, "Jui");
+        mapMonth.put(7, "Aoû");
+        mapMonth.put(8, "Sep");
+        mapMonth.put(9, "Oct");
+        mapMonth.put(10, "Nov");
+        mapMonth.put(11, "Déc");
 		
         return mapMonth.get(month);
 	}

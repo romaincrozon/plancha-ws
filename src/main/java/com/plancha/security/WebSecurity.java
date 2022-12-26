@@ -1,12 +1,5 @@
 package com.plancha.security;
 
-import static com.plancha.security.SecurityConstants.SIGN_UP_URL;
-
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.csrf()
 			.disable()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.POST, SIGN_UP_URL)
+			.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
 			.permitAll()
 				.anyRequest().authenticated().and().addFilter(new JWTAuthenticationFilter(authenticationManager(), context))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager()))

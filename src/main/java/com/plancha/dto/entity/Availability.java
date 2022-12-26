@@ -42,10 +42,10 @@ public class Availability {
     @JoinColumn(name = "requestor_id", referencedColumnName = "id")
     private Resource requestor;
 
-    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "availability")
-    @JsonManagedReference(value="availability-calendarItem")
-    @OrderBy(value = "calendar ASC")
-    private List<CalendarItem> calendarItems;
+//    @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "availability")
+//    @JsonManagedReference(value="availability-calendarItem")
+//    @OrderBy(value = "calendar ASC")
+//    private List<CalendarItem> calendarItems;
 
 	public Long getId() {
 		return id;
@@ -65,12 +65,12 @@ public class Availability {
 	public void setRequestor(Resource requestor) {
 		this.requestor = requestor;
 	}
-	public List<CalendarItem> getCalendarItems() {
-		return calendarItems;
-	}
-	public void setCalendarItems(List<CalendarItem> calendarItems) {
-		this.calendarItems = calendarItems;
-	}
+//	public List<CalendarItem> getCalendarItems() {
+//		return calendarItems;
+//	}
+//	public void setCalendarItems(List<CalendarItem> calendarItems) {
+//		this.calendarItems = calendarItems;
+//	}
 	public int getImplication() {
 		return implication;
 	}

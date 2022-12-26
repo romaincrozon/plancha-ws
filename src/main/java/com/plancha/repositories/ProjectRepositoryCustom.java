@@ -7,6 +7,6 @@ import com.plancha.dto.entity.Project;
 
 public interface ProjectRepositoryCustom {
 
-    List<Project> findProjectByDate(Calendar begin, Calendar end);
+//    List<Project> findProjectByDate(Calendar begin, Calendar end);
 
 }

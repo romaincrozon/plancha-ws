@@ -10,8 +10,8 @@ import com.plancha.dto.entity.Request;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
 	
-	List<Request> findByProjectId(Long projectId);
-	
-    @Query(value = "SELECT request.*, project.name FROM plancha.request request INNER JOIN plancha.project project on request.project_id = project.id", nativeQuery = true) 
-	List<Request> findAllWithProjectName();
+//	List<Request> findByProjectId(Long projectId);
+//	
+//    @Query(value = "SELECT request.*, project.name FROM plancha.request request INNER JOIN plancha.project project on request.project_id = project.id", nativeQuery = true) 
+//	List<Request> findAllWithProjectName();
 }

@@ -13,7 +13,7 @@ public class PlanchaCalendar {
 	public PlanchaCalendar(Calendar calendar, int dayNumberInWeek) {
 		this.calendar = calendar;
 		this.dayNumberInWeek = dayNumberInWeek;
-		this.isHoliday = !CalendarUtils.isWeekDay(this.calendar) /*|| CalendarUtils.isHoliday(this.calendar)*/ ;
+		this.isHoliday = !CalendarUtils.isWeekDay(this.calendar) || CalendarUtils.isHoliday(this.calendar) ;
 	}
 	
 	public Calendar getCalendar() {

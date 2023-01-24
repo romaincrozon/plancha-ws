@@ -1,7 +1,11 @@
 package com.plancha.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,10 +16,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.plancha.dto.entity.Project;
-import com.plancha.dto.entity.Resource;
 import com.plancha.repositories.ProjectRepository;
 import com.plancha.repositories.ResourceRepository;
+import com.plancha.utils.Utils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -34,7 +41,8 @@ public class ProjectController {
 
 	@GetMapping(value = "/project/all", produces = "application/json")
 	public List<Project> getAllProjects() {
-		return projectRepository.findAll();
+		List<Project> projects = projectRepository.findAll();
+		return projects.stream().map(project -> project.cleanParentProject()).collect(Collectors.toList());
 	}
 
 	@GetMapping(value = "/project/{idProject}", produces = "application/json")

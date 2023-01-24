@@ -86,9 +86,7 @@ public class CalendarUtils {
 	}
 	
 	public static boolean isHoliday(Calendar calendar) {
-		JSONObject holidaysJSONObject = HolidaysWS.getInstance().getHolidaysByDate(calendar);
-		Holidays holidays = (Holidays) Utils.mapJSONToDTO(holidaysJSONObject, Holidays.class);
-		return (holidays != null && !holidays.getHolidays().isEmpty());
+		return HolidaysWS.getInstance().isHoliday(calendar);
 	}
 	
 	public static Calendar stringToDate(String date) {

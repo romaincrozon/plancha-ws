@@ -13,20 +13,9 @@ import org.springframework.util.StringUtils;
 
 public class HttpRequest {
 
-	public static void main(String[] args) {
-		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("api_key", "dfd7b1af13ed71dc5a1d1d923f9cddb3");
-		parameters.put("country", "fr");
-		parameters.put("year", "2020");
-		
-		String url = "https://getfestivo.com/v2/holidays";
-		
-		JSONObject jsonResults = request(url, parameters);
-		System.out.println("France holiday 2020: " + jsonResults);
-	}
-	
 	public static JSONObject request(String url, Map<String, String> parameters) { 
 		try {
+			System.out.println(url);
 			HttpURLConnection con = openConnection(url, parameters);
 			if (con != null) {
 				String requestResult = readStream(new InputStreamReader(con.getInputStream()));

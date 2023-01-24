@@ -38,10 +38,10 @@ public class ResourceCalendarController {
 	@PostMapping(value = "/resourceCalendar", consumes = "application/json", produces = "application/json")
 	public ResourceCalendar postResourceCalendar(@RequestBody ResourceCalendar resourceCalendar) {
 		ResourceCalendar resourceCalendarInDatabase = resourceCalendarRepository.findByProjectIdAndResourceId(resourceCalendar.getProject().getId(), resourceCalendar.getResource().getId()).orElse(null); 
-		if (resourceCalendarInDatabase == null) {
-			return resourceCalendarRepository.save(resourceCalendar);
+		if (resourceCalendarInDatabase != null) {
+			resourceCalendar.setId(resourceCalendarInDatabase.getId());
 		}
-		return resourceCalendarInDatabase; 
+		return resourceCalendarRepository.save(resourceCalendar);
 	}
 	
 	@PostMapping(value = "/resourceCalendarByProjectAndResource", consumes = "application/json", produces = "application/json")

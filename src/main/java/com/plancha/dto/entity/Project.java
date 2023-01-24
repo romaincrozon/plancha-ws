@@ -1,6 +1,9 @@
 package com.plancha.dto.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,20 +13,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.plancha.serializer.RequestSerializer;
+import com.plancha.controllers.ProjectController;
 
 @Entity
 @Table(name = "project")
@@ -49,8 +46,6 @@ public class Project extends com.plancha.dto.entity.Entity{
 	private Integer confidencePercentage;
 
 	private Float soldWorkload;
-	
-	@Column(name="challenged_workload", nullable = true)
 	private Float challengedWorkload;
 	
 	private Float consumedWorkload;
@@ -61,7 +56,7 @@ public class Project extends com.plancha.dto.entity.Entity{
 //    @JsonManagedReference(value="project-project")
 //	@OrderBy("name ASC")
 	@OneToMany(mappedBy="parent",cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<Project> projects;
+	private List<Project> projects;
 
 //    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Resource.class, mappedBy = "projects")
 //    @JsonManagedReference(value="resource-project")
@@ -89,7 +84,7 @@ public class Project extends com.plancha.dto.entity.Entity{
 //	public Project(Long id) {
 //		this.id = id;
 //	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -110,10 +105,10 @@ public class Project extends com.plancha.dto.entity.Entity{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Set<Project> getProjects() {
+	public List<Project> getProjects() {
 		return projects;
 	}
-	public void setProjects(Set<Project> projects) {
+	public void setProjects(List<Project> projects) {
 		this.projects = projects;
 	}
 	public Integer getConfidencePercentage() {
@@ -192,4 +187,8 @@ public class Project extends com.plancha.dto.entity.Entity{
 	public void setResourceCalendars(Set<ResourceCalendar> resourceCalendars) {
 		this.resourceCalendars = resourceCalendars;
 	}
+	public Project cleanParentProject() {
+		this.setProjects(null);
+		return this;
+	};
 }

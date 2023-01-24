@@ -3,6 +3,7 @@ package com.plancha.utils;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.plancha.dto.entity.Project;
 
 public class Utils {
 	
@@ -31,6 +33,14 @@ public class Utils {
 	public static List<String> replaceValuesInMap(Map<String, String> map){
 		return map.values().stream().map(value -> value.replace("'", "''")).collect(Collectors.toList());
 	}
+
+	public static void mapProjects(List<Project> allProjects, List<Project> projects) {
+		projects.forEach(project -> {
+			allProjects.add(project);
+			mapProjects(allProjects, project.getProjects());
+		});
+	}
+	
 	
 //	public static Status getDefaultStatus(StatusRepository statusRepository) {
 //		Status defaultStatus = statusRepository.findByDefaultStatus(true);

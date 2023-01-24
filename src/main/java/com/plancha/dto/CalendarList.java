@@ -15,7 +15,7 @@ public class CalendarList {
 	private List<PlanchaWeek> weekList = new ArrayList<PlanchaWeek>();
 
 	public CalendarList(CalendarRange calendarRange, boolean isWeekView) {
-
+		Calendar.getInstance().setFirstDayOfWeek(Calendar.MONDAY);
 		Calendar begin = calendarRange.getStartDate();
 		Calendar end = calendarRange.getEndDate();
 		
@@ -23,6 +23,11 @@ public class CalendarList {
 			if (!begin.before(end)) {
 				System.out.println("End date before begin date");
 			}
+			System.out.println(begin.getTime());
+			if (begin.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+				begin.add(Calendar.DAY_OF_MONTH, begin.get(Calendar.DAY_OF_WEEK) - 7);
+			}
+			System.out.println(begin.getTime());
 			PlanchaCalendar planchaCalendarBegin = new PlanchaCalendar(CalendarUtils.createCalendar(begin), 1);
 			List<PlanchaCalendar> weekPlanchaCalendar = new ArrayList<PlanchaCalendar>();
 			this.planchaCalendarList.add(planchaCalendarBegin);
@@ -65,14 +70,6 @@ public class CalendarList {
 			if (numberOfDaysInWeek > 0)
 				this.weekList.add(new PlanchaWeek(year, currentWeek, numberOfDaysInWeek, weekPlanchaCalendar));
 		}
-		try {
-			System.out.println(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(planchaCalendarList));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
 	}
 	
 	public List<PlanchaCalendar> getPlanchaCalendarList() {

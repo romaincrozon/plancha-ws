@@ -42,6 +42,7 @@ public class Resource {
 	private String token;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, targetEntity = ResourceCalendar.class, mappedBy = "resource")
+	@JsonIgnore
 	private Set<ResourceCalendar> resourceCalendars;
 
 //    @ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER)
@@ -112,12 +113,6 @@ public class Resource {
 	public void setResourceCalendars(Set<ResourceCalendar> resourceCalendars) {
 		this.resourceCalendars = resourceCalendars;
 	}
-//	public Set<Project> getProjects() {
-//		return projects;
-//	}
-//	public void setProjects(Set<Project> projects) {
-//		this.projects = projects;
-//	}
 	public String getUsername() {
 		return username;
 	}
@@ -160,5 +155,9 @@ public class Resource {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public Resource cleanResourceCalendars() {
+		this.setResourceCalendars(null);
+		return this;
+	}; 
 	
 }

@@ -1,6 +1,7 @@
 package com.plancha.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,7 +39,8 @@ public class ResourceController {
 
 	@GetMapping(value = "/resource", produces = "application/json")
 	public List<Resource> getResources() {
-		return resourceRepository.findAll();
+		List<Resource> resources = resourceRepository.findAll();
+		return resources.stream().map(resource -> resource.cleanResourceCalendars()).collect(Collectors.toList());
 	}
 
 	@GetMapping(value = "/resource/{idResource}", produces = "application/json")

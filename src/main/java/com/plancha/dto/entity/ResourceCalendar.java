@@ -34,7 +34,7 @@ public class ResourceCalendar {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
-//    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityReference(alwaysAsId = true)
     private Resource resource;
     
     @OneToMany(cascade = { CascadeType.ALL }, targetEntity = CalendarItem.class, mappedBy = "resourceCalendar")

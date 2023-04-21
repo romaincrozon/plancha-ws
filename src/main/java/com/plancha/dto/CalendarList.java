@@ -24,8 +24,8 @@ public class CalendarList {
 				System.out.println("End date before begin date");
 			}
 			System.out.println(begin.getTime());
-			if (begin.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-				begin.add(Calendar.DAY_OF_MONTH, begin.get(Calendar.DAY_OF_WEEK) - 7);
+			if (begin.get(Calendar.DAY_OF_MONTH) != Calendar.MONDAY) {
+				begin.add(Calendar.DAY_OF_MONTH, Calendar.MONDAY - begin.get(Calendar.DAY_OF_WEEK));
 			}
 			System.out.println(begin.getTime());
 			PlanchaCalendar planchaCalendarBegin = new PlanchaCalendar(CalendarUtils.createCalendar(begin), 1);
